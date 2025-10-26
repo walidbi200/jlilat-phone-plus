@@ -25,7 +25,7 @@ class ProductsManager {
     if (!container) return;
 
     if (this.products.length === 0) {
-      container.innerHTML = `<p class="no-data">${FR.products.noProducts}</p>`;
+      container.innerHTML = `<p class="no-data">${fr.products.noProducts}</p>`;
       return;
     }
 
@@ -33,13 +33,13 @@ class ProductsManager {
       <table class="data-table">
         <thead>
           <tr>
-            <th>${FR.products.name}</th>
-            <th>${FR.products.category}</th>
-            <th>${FR.products.buyingPrice}</th>
-            <th>${FR.products.sellingPrice}</th>
-            <th>${FR.products.stock}</th>
-            <th>${FR.products.lowStockThreshold}</th>
-            <th>${FR.products.actions}</th>
+            <th>${fr.products.name}</th>
+            <th>${fr.products.category}</th>
+            <th>${fr.products.buyingPrice}</th>
+            <th>${fr.products.sellingPrice}</th>
+            <th>${fr.products.stock}</th>
+            <th>${fr.products.lowStockThreshold}</th>
+            <th>${fr.products.actions}</th>
           </tr>
         </thead>
         <tbody>
@@ -48,7 +48,7 @@ class ProductsManager {
     this.products.forEach(product => {
       const isLowStock = product.stock <= product.low_stock_threshold;
       const lowStockClass = isLowStock ? 'low-stock' : '';
-      const lowStockBadge = isLowStock ? `<span class="badge badge-warning">${FR.products.lowStockAlert}</span>` : '';
+      const lowStockBadge = isLowStock ? `<span class="badge badge-warning">${fr.products.lowStockAlert}</span>` : '';
 
       const buyingPrice = product.buyingPrice || 0;
       const sellingPrice = product.price || product.sellingPrice || 0;
@@ -62,8 +62,8 @@ class ProductsManager {
           <td>${product.stock} ${lowStockBadge}</td>
           <td>${product.low_stock_threshold}</td>
           <td>
-            <button class="btn btn-sm btn-edit" onclick="productsManager.editProduct('${product.id}')">${FR.products.edit}</button>
-            <button class="btn btn-sm btn-delete" onclick="productsManager.deleteProduct('${product.id}')">${FR.products.delete}</button>
+            <button class="btn btn-sm btn-edit" onclick="productsManager.editProduct('${product.id}')">${fr.products.edit}</button>
+            <button class="btn btn-sm btn-delete" onclick="productsManager.deleteProduct('${product.id}')">${fr.products.delete}</button>
           </td>
         </tr>
       `;
@@ -117,7 +117,7 @@ class ProductsManager {
           low_stock_threshold
         };
         await this.saveProducts();
-        this.showNotification(FR.products.updateSuccess);
+        this.showNotification(fr.products.updateSuccess);
       }
     } else {
       // Add new product
@@ -133,7 +133,7 @@ class ProductsManager {
       };
       this.products.push(newProduct);
       await this.saveProducts();
-      this.showNotification(FR.products.addSuccess);
+      this.showNotification(fr.products.addSuccess);
     }
 
     this.resetForm();
@@ -155,17 +155,17 @@ class ProductsManager {
 
     const formTitle = document.getElementById('product-form-title');
     if (formTitle) {
-      formTitle.textContent = FR.products.editProduct;
+      formTitle.textContent = fr.products.editProduct;
     }
     document.getElementById('cancel-product-btn').style.display = 'inline-block';
   }
 
   async deleteProduct(id) {
-    if (!confirm(FR.products.deleteConfirm)) return;
+    if (!confirm(fr.products.deleteConfirm)) return;
 
     this.products = this.products.filter(p => p.id !== id);
     await this.saveProducts();
-    this.showNotification(FR.products.deleteSuccess);
+    this.showNotification(fr.products.deleteSuccess);
     this.render();
   }
 
@@ -174,7 +174,7 @@ class ProductsManager {
     this.currentEditId = null;
     const formTitle = document.getElementById('product-form-title');
     if (formTitle) {
-      formTitle.textContent = FR.products.addProduct;
+      formTitle.textContent = fr.products.addProduct;
     }
     document.getElementById('cancel-product-btn').style.display = 'none';
   }

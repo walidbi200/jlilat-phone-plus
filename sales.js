@@ -31,7 +31,7 @@ class SalesManager {
     if (!container) return;
 
     if (this.sales.length === 0) {
-      container.innerHTML = `<p class="no-data">${FR.sales.noSales}</p>`;
+      container.innerHTML = `<p class="no-data">${fr.sales.noSales}</p>`;
       return;
     }
 
@@ -39,11 +39,11 @@ class SalesManager {
       <table class="data-table">
         <thead>
           <tr>
-            <th>${FR.sales.date}</th>
-            <th>${FR.sales.items}</th>
-            <th>${FR.sales.totalAmount}</th>
-            <th>${FR.sales.paymentMethod}</th>
-            <th>${FR.sales.actions}</th>
+            <th>${fr.sales.date}</th>
+            <th>${fr.sales.items}</th>
+            <th>${fr.sales.totalAmount}</th>
+            <th>${fr.sales.paymentMethod}</th>
+            <th>${fr.sales.actions}</th>
           </tr>
         </thead>
         <tbody>
@@ -64,8 +64,8 @@ class SalesManager {
           <td>${sale.total.toFixed(2)} DH</td>
           <td>${paymentMethod}</td>
           <td>
-            <button class="btn btn-sm btn-view" onclick="salesManager.viewSale('${sale.id}')">${FR.sales.view}</button>
-            <button class="btn btn-sm btn-delete" onclick="salesManager.deleteSale('${sale.id}')">${FR.sales.delete}</button>
+            <button class="btn btn-sm btn-view" onclick="salesManager.viewSale('${sale.id}')">${fr.sales.view}</button>
+            <button class="btn btn-sm btn-delete" onclick="salesManager.deleteSale('${sale.id}')">${fr.sales.delete}</button>
           </td>
         </tr>
       `;
@@ -92,11 +92,11 @@ class SalesManager {
       <table class="data-table">
         <thead>
           <tr>
-            <th>${FR.sales.product}</th>
-            <th>${FR.sales.quantity}</th>
-            <th>${FR.sales.unitPrice}</th>
-            <th>${FR.sales.total}</th>
-            <th>${FR.sales.actions}</th>
+            <th>${fr.sales.product}</th>
+            <th>${fr.sales.quantity}</th>
+            <th>${fr.sales.unitPrice}</th>
+            <th>${fr.sales.total}</th>
+            <th>${fr.sales.actions}</th>
           </tr>
         </thead>
         <tbody>
@@ -110,7 +110,7 @@ class SalesManager {
           <td>${item.unitPrice.toFixed(2)} DH</td>
           <td>${(item.quantity * item.unitPrice).toFixed(2)} DH</td>
           <td>
-            <button class="btn btn-sm btn-delete" onclick="salesManager.removeItem(${index})">${FR.sales.delete}</button>
+            <button class="btn btn-sm btn-delete" onclick="salesManager.removeItem(${index})">${fr.sales.delete}</button>
           </td>
         </tr>
       `;
@@ -122,7 +122,7 @@ class SalesManager {
         </tbody>
         <tfoot>
           <tr>
-            <td colspan="3" style="text-align: right;"><strong>${FR.sales.total}:</strong></td>
+            <td colspan="3" style="text-align: right;"><strong>${fr.sales.total}:</strong></td>
             <td colspan="2"><strong>${total.toFixed(2)} DH</strong></td>
           </tr>
         </tfoot>
@@ -150,7 +150,7 @@ class SalesManager {
     const select = document.getElementById('sale-product');
     if (!select) return;
 
-    select.innerHTML = `<option value="">${FR.sales.selectProduct}</option>`;
+    select.innerHTML = `<option value="">${fr.sales.selectProduct}</option>`;
     
     productsManager.products.forEach(product => {
       const option = document.createElement('option');
@@ -180,12 +180,12 @@ class SalesManager {
     const quantity = parseInt(document.getElementById('sale-quantity').value);
 
     if (!productId) {
-      alert(FR.sales.selectProductFirst);
+      alert(fr.sales.selectProductFirst);
       return;
     }
 
     if (!quantity || quantity <= 0) {
-      alert(FR.sales.enterQuantity);
+      alert(fr.sales.enterQuantity);
       return;
     }
 
@@ -193,7 +193,7 @@ class SalesManager {
     if (!product) return;
 
     if (product.stock < quantity) {
-      alert(FR.sales.insufficientStock);
+      alert(fr.sales.insufficientStock);
       return;
     }
 
@@ -225,7 +225,7 @@ class SalesManager {
 
   async completeSale() {
     if (this.currentSaleItems.length === 0) {
-      alert(FR.sales.addAtLeastOneItem);
+      alert(fr.sales.addAtLeastOneItem);
       return;
     }
 
@@ -254,7 +254,7 @@ class SalesManager {
 
     // Reset
     this.currentSaleItems = [];
-    this.showNotification(FR.sales.saleSuccess);
+    this.showNotification(fr.sales.saleSuccess);
     this.render();
     this.populateProductSelect();
   }
@@ -282,31 +282,31 @@ class SalesManager {
 
     const message = `
       <div class="sale-details">
-        <p><strong>${FR.sales.date}:</strong> ${date}</p>
-        <p><strong>${FR.sales.paymentMethod}:</strong> ${paymentMethod}</p>
-        <p><strong>${FR.sales.items}:</strong></p>
+        <p><strong>${fr.sales.date}:</strong> ${date}</p>
+        <p><strong>${fr.sales.paymentMethod}:</strong> ${paymentMethod}</p>
+        <p><strong>${fr.sales.items}:</strong></p>
         ${itemsHtml}
-        <p><strong>${FR.sales.total}:</strong> ${sale.total.toFixed(2)} DH</p>
+        <p><strong>${fr.sales.total}:</strong> ${sale.total.toFixed(2)} DH</p>
       </div>
     `;
 
-    this.showModal(FR.sales.saleDetails, message);
+    this.showModal(fr.sales.saleDetails, message);
   }
 
   async deleteSale(id) {
-    if (!confirm(FR.sales.deleteConfirm)) return;
+    if (!confirm(fr.sales.deleteConfirm)) return;
 
     this.sales = this.sales.filter(s => s.id !== id);
     await this.saveSales();
-    this.showNotification(FR.sales.deleteSuccess);
+    this.showNotification(fr.sales.deleteSuccess);
     this.render();
   }
 
   getPaymentMethodLabel(method) {
     const labels = {
-      'cash': FR.sales.cash,
-      'card': FR.sales.card,
-      'transfer': FR.sales.transfer
+      'cash': fr.sales.cash,
+      'card': fr.sales.card,
+      'transfer': fr.sales.transfer
     };
     return labels[method] || method;
   }

@@ -25,7 +25,7 @@ class RepairsManager {
     if (!container) return;
 
     if (this.repairs.length === 0) {
-      container.innerHTML = `<p class="no-data">${FR.repairs.noRepairs}</p>`;
+      container.innerHTML = `<p class="no-data">${fr.repairs.noRepairs}</p>`;
       return;
     }
 
@@ -33,13 +33,13 @@ class RepairsManager {
       <table class="data-table">
         <thead>
           <tr>
-            <th>${FR.repairs.customerName}</th>
-            <th>${FR.repairs.device}</th>
-            <th>${FR.repairs.issue}</th>
-            <th>${FR.repairs.status}</th>
-            <th>${FR.repairs.cost}</th>
-            <th>${FR.repairs.createdAt}</th>
-            <th>${FR.repairs.actions}</th>
+            <th>${fr.repairs.customerName}</th>
+            <th>${fr.repairs.device}</th>
+            <th>${fr.repairs.issue}</th>
+            <th>${fr.repairs.status}</th>
+            <th>${fr.repairs.cost}</th>
+            <th>${fr.repairs.createdAt}</th>
+            <th>${fr.repairs.actions}</th>
           </tr>
         </thead>
         <tbody>
@@ -62,8 +62,8 @@ class RepairsManager {
           <td>${repair.cost.toFixed(2)} DH</td>
           <td>${createdDate}</td>
           <td>
-            <button class="btn btn-sm btn-edit" onclick="repairsManager.editRepair('${repair.id}')">${FR.repairs.edit}</button>
-            <button class="btn btn-sm btn-delete" onclick="repairsManager.deleteRepair('${repair.id}')">${FR.repairs.delete}</button>
+            <button class="btn btn-sm btn-edit" onclick="repairsManager.editRepair('${repair.id}')">${fr.repairs.edit}</button>
+            <button class="btn btn-sm btn-delete" onclick="repairsManager.deleteRepair('${repair.id}')">${fr.repairs.delete}</button>
           </td>
         </tr>
       `;
@@ -115,7 +115,7 @@ class RepairsManager {
           updated_at: new Date().toISOString()
         };
         await this.saveRepairs();
-        this.showNotification(FR.repairs.updateSuccess);
+        this.showNotification(fr.repairs.updateSuccess);
       }
     } else {
       // Add new repair
@@ -131,7 +131,7 @@ class RepairsManager {
       };
       this.repairs.push(newRepair);
       await this.saveRepairs();
-      this.showNotification(FR.repairs.addSuccess);
+      this.showNotification(fr.repairs.addSuccess);
     }
 
     this.resetForm();
@@ -152,7 +152,7 @@ class RepairsManager {
 
     const formTitle = document.getElementById('repair-form-title');
     if (formTitle) {
-      formTitle.textContent = FR.repairs.editRepair;
+      formTitle.textContent = fr.repairs.editRepair;
     }
     document.getElementById('cancel-repair-btn').style.display = 'inline-block';
 
@@ -161,11 +161,11 @@ class RepairsManager {
   }
 
   async deleteRepair(id) {
-    if (!confirm(FR.repairs.deleteConfirm)) return;
+    if (!confirm(fr.repairs.deleteConfirm)) return;
 
     this.repairs = this.repairs.filter(r => r.id !== id);
     await this.saveRepairs();
-    this.showNotification(FR.repairs.deleteSuccess);
+    this.showNotification(fr.repairs.deleteSuccess);
     this.render();
   }
 
@@ -174,16 +174,16 @@ class RepairsManager {
     this.currentEditId = null;
     const formTitle = document.getElementById('repair-form-title');
     if (formTitle) {
-      formTitle.textContent = FR.repairs.addRepair;
+      formTitle.textContent = fr.repairs.addRepair;
     }
     document.getElementById('cancel-repair-btn').style.display = 'none';
   }
 
   getStatusLabel(status) {
     const labels = {
-      'pending': FR.repairs.pending,
-      'in_progress': FR.repairs.inProgress,
-      'completed': FR.repairs.completed
+      'pending': fr.repairs.pending,
+      'in_progress': fr.repairs.inProgress,
+      'completed': fr.repairs.completed
     };
     return labels[status] || status;
   }

@@ -34,7 +34,7 @@ class PhonesManager {
     if (!tableBody) return;
 
     if (this.phones.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="9" class="no-data">${FR.phones.noPhones}</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="9" class="no-data">${fr.phones.noPhones}</td></tr>`;
       return;
     }
 
@@ -54,11 +54,11 @@ class PhonesManager {
           <td>${this.escapeHtml(phone.imei || 'N/A')}</td>
           <td>${phone.battery_health ? phone.battery_health + '%' : 'N/A'}</td>
           <td>${phone.charge_cycle || 'N/A'}</td>
-          <td>${phone.selling_price.toFixed(2)} ${FR.common.currency}</td>
+          <td>${phone.selling_price.toFixed(2)} ${fr.common.currency}</td>
           <td>
-            <button class="btn btn-sm btn-secondary" onclick="phonesManager.printPhone('${phone.id}')">${FR.phones.printWarranty}</button>
-            <button class="btn btn-sm btn-edit" onclick="phonesManager.editPhone('${phone.id}')">${FR.phones.edit}</button>
-            <button class="btn btn-sm btn-delete" onclick="phonesManager.deletePhone('${phone.id}')">${FR.phones.delete}</button>
+            <button class="btn btn-sm btn-secondary" onclick="phonesManager.printPhone('${phone.id}')">${fr.phones.printWarranty}</button>
+            <button class="btn btn-sm btn-edit" onclick="phonesManager.editPhone('${phone.id}')">${fr.phones.edit}</button>
+            <button class="btn btn-sm btn-delete" onclick="phonesManager.deletePhone('${phone.id}')">${fr.phones.delete}</button>
           </td>
         </tr>
       `;
@@ -169,13 +169,13 @@ class PhonesManager {
       if (index !== -1) {
         this.phones[index] = phoneData;
         await this.savePhones();
-        this.showNotification(FR.phones.updateSuccess);
+        this.showNotification(fr.phones.updateSuccess);
       }
     } else {
       // Add new phone
       this.phones.push(phoneData);
       await this.savePhones();
-      this.showNotification(FR.phones.addSuccess);
+      this.showNotification(fr.phones.addSuccess);
     }
 
     this.resetForm();
@@ -203,7 +203,7 @@ class PhonesManager {
 
     const formTitle = document.getElementById('phone-form-title');
     if (formTitle) {
-      formTitle.textContent = FR.phones.editPhoneSale;
+      formTitle.textContent = fr.phones.editPhoneSale;
     }
     
     document.getElementById('cancel-phone-edit-btn').style.display = 'inline-block';
@@ -214,11 +214,11 @@ class PhonesManager {
   }
 
   async deletePhone(id) {
-    if (!confirm(FR.phones.deleteConfirm)) return;
+    if (!confirm(fr.phones.deleteConfirm)) return;
 
     this.phones = this.phones.filter(p => p.id !== id);
     await this.savePhones();
-    this.showNotification(FR.phones.deleteSuccess);
+    this.showNotification(fr.phones.deleteSuccess);
     this.render();
   }
 
@@ -228,7 +228,7 @@ class PhonesManager {
     
     const formTitle = document.getElementById('phone-form-title');
     if (formTitle) {
-      formTitle.textContent = FR.phones.addPhoneSale;
+      formTitle.textContent = fr.phones.addPhoneSale;
     }
     
     document.getElementById('cancel-phone-edit-btn').style.display = 'none';

@@ -163,7 +163,7 @@ function initDataManagementPage() {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        showToast(FR.dataManagement.exportSuccess || 'Données exportées avec succès');
+        showToast(fr.dataManagement.exportSuccess || 'Données exportées avec succès');
       } catch (error) {
         console.error('Export error:', error);
         showToast('Erreur lors de l\'exportation', true);
@@ -194,7 +194,7 @@ function initDataManagementPage() {
         return;
       }
 
-      if (!confirm(FR.dataManagement.confirmRestore || 'ATTENTION : Cette action remplacera toutes vos données actuelles. Continuer ?')) {
+      if (!confirm(fr.dataManagement.confirmRestore || 'ATTENTION : Cette action remplacera toutes vos données actuelles. Continuer ?')) {
         return;
       }
 
@@ -220,10 +220,10 @@ function initDataManagementPage() {
         importInput.value = '';
         restoreBtn.disabled = true;
         
-        showToast(FR.dataManagement.importSuccess || 'Données restaurées avec succès');
+        showToast(fr.dataManagement.importSuccess || 'Données restaurées avec succès');
       } catch (error) {
         console.error('Import error:', error);
-        showToast(FR.dataManagement.importError || 'Erreur lors de l\'importation', true);
+        showToast(fr.dataManagement.importError || 'Erreur lors de l\'importation', true);
       }
     };
   }
