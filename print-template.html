@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bon de Garantie</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      color: #333;
+      background-color: #fff;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      border: 2px solid #000;
+      padding: 30px;
+      border-radius: 10px;
+    }
+
+    .store-name {
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+      color: #000;
+      margin-top: 0;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      border-bottom: 3px solid #000;
+      padding-bottom: 15px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .section {
+      margin-bottom: 25px;
+    }
+
+    .section h2 {
+      font-size: 18px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #333;
+      color: #000;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .detail-item {
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .detail-item strong {
+      display: inline-block;
+      min-width: 200px;
+      color: #000;
+      font-weight: 600;
+    }
+
+    .detail-item span {
+      color: #333;
+    }
+
+    .detail-item.hidden {
+      display: none;
+    }
+
+    .footer {
+      margin-top: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .signature-box {
+      text-align: center;
+    }
+
+    .signature-box .label {
+      font-size: 14px;
+      margin-bottom: 40px;
+      font-weight: 600;
+    }
+
+    .signature-box .line {
+      border-top: 2px solid #333;
+      width: 200px;
+      margin: 0 auto;
+    }
+
+    .stamp-box {
+      border: 2px dashed #999;
+      width: 200px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #999;
+      font-style: italic;
+      padding: 10px;
+    }
+
+    .warranty-notice {
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #f5f5f5;
+      border-left: 4px solid #333;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        padding: 0;
+      }
+
+      .container {
+        border: 2px solid #000;
+        max-width: 100%;
+      }
+
+      @page {
+        margin: 1cm;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="store-name">Jlilat Phone Plus</h1>
+    
+    <div class="header">
+      <h1>📱 Bon de Garantie</h1>
+      <p>Certificat de Vente et Garantie</p>
+    </div>
+
+    <div class="details-grid">
+      <div class="section">
+        <h2>📦 Détails du Produit</h2>
+        <div class="detail-item">
+          <strong>Nom du Téléphone:</strong>
+          <span id="data-name"></span>
+        </div>
+        <div class="detail-item">
+          <strong>Marque:</strong>
+          <span id="data-brand"></span>
+        </div>
+        <div class="detail-item" id="detail-condition">
+          <strong>État:</strong>
+          <span id="data-condition"></span>
+        </div>
+        <div class="detail-item">
+          <strong>Numéro de Série (SN):</strong>
+          <span id="data-sn"></span>
+        </div>
+        <div class="detail-item">
+          <strong>Numéro IMEI:</strong>
+          <span id="data-imei"></span>
+        </div>
+        <div class="detail-item" id="detail-battery">
+          <strong>État de Batterie:</strong>
+          <span id="data-battery"></span>
+        </div>
+        <div class="detail-item" id="detail-cycle">
+          <strong>Cycle de Charge:</strong>
+          <span id="data-cycle"></span>
+        </div>
+        <div class="detail-item">
+          <strong>Prix de Vente:</strong>
+          <span id="data-price"></span>
+        </div>
+        <div class="detail-item">
+          <strong>Date de Vente:</strong>
+          <span id="data-sale-date"></span>
+        </div>
+        <div class="detail-item">
+          <strong>Garantie Valable Jusqu'au:</strong>
+          <span id="data-warranty-date"></span>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>👤 Détails du Client</h2>
+        <div class="detail-item">
+          <strong>Nom du Client:</strong>
+          <span id="data-customer-name"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="warranty-notice">
+      <strong>Conditions de Garantie:</strong><br>
+      Cette garantie couvre les défauts de fabrication. Elle ne couvre pas les dommages causés par une mauvaise utilisation, 
+      une chute, un contact avec des liquides ou toute modification non autorisée. Pour toute réclamation sous garantie, 
+      veuillez présenter ce bon accompagné de la facture d'achat.
+    </div>
+
+    <div class="footer">
+      <div class="signature-box">
+        <div class="label">Signature du Client</div>
+        <div class="line"></div>
+      </div>
+
+      <div class="stamp-box">
+        Cachet du Magasin
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Load phone data from localStorage
+      const dataString = localStorage.getItem('printPhoneData');
+      
+      if (!dataString) {
+        document.body.innerHTML = '<div style="text-align: center; margin-top: 50px;"><h2>Erreur: Aucune donnée à imprimer</h2></div>';
+        return;
+      }
+
+      try {
+        const data = JSON.parse(dataString);
+
+        // Populate all fields
+        document.getElementById('data-name').textContent = data.name || 'N/A';
+        document.getElementById('data-brand').textContent = data.brand || 'N/A';
+        document.getElementById('data-sn').textContent = data.sn || 'N/A';
+        document.getElementById('data-imei').textContent = data.imei || 'N/A';
+        document.getElementById('data-price').textContent = `${data.selling_price} DH`;
+        document.getElementById('data-customer-name').textContent = data.customer_name;
+        
+        // Format dates
+        const saleDate = new Date(data.sale_date).toLocaleDateString('fr-FR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        });
+        document.getElementById('data-sale-date').textContent = saleDate;
+
+        if (data.warranty_date) {
+          const warrantyDate = new Date(data.warranty_date).toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          });
+          document.getElementById('data-warranty-date').textContent = warrantyDate;
+        } else {
+          document.getElementById('data-warranty-date').textContent = 'N/A';
+        }
+
+        // Show/hide conditional fields
+        const detailCondition = document.getElementById('detail-condition');
+        const detailBattery = document.getElementById('detail-battery');
+        const detailCycle = document.getElementById('detail-cycle');
+
+        if (data.condition) {
+          document.getElementById('data-condition').textContent = data.condition;
+          detailCondition.classList.remove('hidden');
+        } else {
+          detailCondition.classList.add('hidden');
+        }
+
+        if (data.battery_health) {
+          document.getElementById('data-battery').textContent = `${data.battery_health}%`;
+          detailBattery.classList.remove('hidden');
+        } else {
+          detailBattery.classList.add('hidden');
+        }
+
+        if (data.charge_cycle) {
+          document.getElementById('data-cycle').textContent = data.charge_cycle;
+          detailCycle.classList.remove('hidden');
+        } else {
+          detailCycle.classList.add('hidden');
+        }
+
+        // Clean up localStorage after loading
+        localStorage.removeItem('printPhoneData');
+      } catch (error) {
+        console.error('Error parsing phone data:', error);
+        document.body.innerHTML = '<div style="text-align: center; margin-top: 50px;"><h2>Erreur de chargement des données</h2></div>';
+      }
+    });
+  </script>
+</body>
+</html>
+
