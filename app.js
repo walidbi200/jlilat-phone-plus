@@ -8,6 +8,63 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error("initProductsPage function not found. Did you include products.js?");
   }
 
+  // --- ADD FORM LISTENERS ONCE (Fixed: Prevents duplicate submissions) ---
+  const productForm = document.getElementById('product-form');
+  if (productForm) {
+      productForm.addEventListener('submit', (e) => {
+          if (typeof productsManager !== 'undefined') {
+              productsManager.handleSubmit(e);
+          }
+      });
+  }
+
+  const phoneForm = document.getElementById('add-phone-form');
+  if (phoneForm) {
+      phoneForm.addEventListener('submit', (e) => {
+          if (typeof phonesManager !== 'undefined') {
+              phonesManager.handleSubmit(e);
+          }
+      });
+  }
+
+  const repairForm = document.getElementById('repair-form');
+  if (repairForm) {
+      repairForm.addEventListener('submit', (e) => {
+          if (typeof repairsManager !== 'undefined') {
+              repairsManager.handleSubmit(e);
+          }
+      });
+  }
+
+  // Sales module button listeners (Fixed: Prevents duplicate submissions)
+  const addSaleItemBtn = document.getElementById('add-sale-item-btn');
+  if (addSaleItemBtn) {
+      addSaleItemBtn.addEventListener('click', () => {
+          if (typeof salesManager !== 'undefined') {
+              salesManager.addItem();
+          }
+      });
+  }
+
+  const completeSaleBtn = document.getElementById('complete-sale-btn');
+  if (completeSaleBtn) {
+      completeSaleBtn.addEventListener('click', () => {
+          if (typeof salesManager !== 'undefined') {
+              salesManager.completeSale();
+          }
+      });
+  }
+
+  const cancelSaleBtn = document.getElementById('cancel-sale-btn');
+  if (cancelSaleBtn) {
+      cancelSaleBtn.addEventListener('click', () => {
+          if (typeof salesManager !== 'undefined') {
+              salesManager.cancelSale();
+          }
+      });
+  }
+  // --- END FORM LISTENERS ---
+
   // Navigation tabs listener
   document.querySelectorAll('.nav-tab').forEach(tab => {
       tab.addEventListener('click', () => {
@@ -21,9 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
           // Show the corresponding page
           showPage(pageId);
 
-          // Call the init function for the specific page
-          // This re-loads the data tables every time you switch tabs
+          // Call the init function to *render* data (not to attach listeners)
           switch (pageId) {
+              case 'dashboard':
+                  if (typeof initDashboardPage === 'function') initDashboardPage();
+                  break;
               case 'produits':
                   if (typeof initProductsPage === 'function') initProductsPage();
                   break;

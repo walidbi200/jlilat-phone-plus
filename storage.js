@@ -89,7 +89,7 @@ class Storage {
       const phones = await this.getPhones();
 
       const exportData = {
-        version: '1.3',
+        version: '1.4',
         exportDate: new Date().toISOString(),
         products: products,
         sales: sales,

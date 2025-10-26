@@ -68,29 +68,31 @@ class PhonesManager {
   }
 
   attachEventListeners() {
-    const form = document.getElementById('add-phone-form');
-    if (form) {
-      form.addEventListener('submit', (e) => this.handleSubmit(e));
-    }
-
+    // Form submit listener is now in app.js to prevent duplicates
+    // Only attach listeners for elements that are re-created on render
+    
     const cancelBtn = document.getElementById('cancel-phone-edit-btn');
     if (cancelBtn) {
       cancelBtn.addEventListener('click', () => this.resetForm());
     }
 
-    // Add event listeners for conditional logic
+    // Keep conditional logic listeners (these need to be re-attached)
     const brandSelect = document.getElementById('phone-brand');
     const conditionSelect = document.getElementById('phone-condition');
     const nameInput = document.getElementById('phone-name');
 
     if (brandSelect) {
-      brandSelect.addEventListener('change', () => this.updateFormLogic());
+      brandSelect.removeEventListener('change', this.boundUpdateFormLogic);
+      this.boundUpdateFormLogic = () => this.updateFormLogic();
+      brandSelect.addEventListener('change', this.boundUpdateFormLogic);
     }
     if (conditionSelect) {
-      conditionSelect.addEventListener('change', () => this.updateFormLogic());
+      conditionSelect.removeEventListener('change', this.boundUpdateFormLogic);
+      conditionSelect.addEventListener('change', this.boundUpdateFormLogic);
     }
     if (nameInput) {
-      nameInput.addEventListener('input', () => this.updateFormLogic());
+      nameInput.removeEventListener('input', this.boundUpdateFormLogic);
+      nameInput.addEventListener('input', this.boundUpdateFormLogic);
     }
   }
 
@@ -137,6 +139,7 @@ class PhonesManager {
     const sn = document.getElementById('phone-sn').value.trim();
     const imei = document.getElementById('phone-imei').value.trim();
     const selling_price = parseFloat(document.getElementById('phone-selling-price').value);
+    const buying_price = parseFloat(document.getElementById('phone-buying-price').value) || 0;
     const warranty_date = document.getElementById('phone-warranty-date').value;
 
     if (!name || !brand || !sale_date || !customer_name || isNaN(selling_price)) {
@@ -156,6 +159,7 @@ class PhonesManager {
       sn,
       imei,
       selling_price,
+      buyingPrice: buying_price,
       warranty_date
     };
 
@@ -194,6 +198,7 @@ class PhonesManager {
     document.getElementById('phone-sn').value = phone.sn || '';
     document.getElementById('phone-imei').value = phone.imei || '';
     document.getElementById('phone-selling-price').value = phone.selling_price;
+    document.getElementById('phone-buying-price').value = phone.buyingPrice || 0;
     document.getElementById('phone-warranty-date').value = phone.warranty_date || '';
 
     const formTitle = document.getElementById('phone-form-title');

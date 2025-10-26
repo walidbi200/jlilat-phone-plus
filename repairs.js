@@ -78,11 +78,9 @@ class RepairsManager {
   }
 
   attachEventListeners() {
-    const form = document.getElementById('repair-form');
-    if (form) {
-      form.addEventListener('submit', (e) => this.handleSubmit(e));
-    }
-
+    // Form submit listener is now in app.js to prevent duplicates
+    // Only attach listeners for elements that are re-created on render
+    
     const cancelBtn = document.getElementById('cancel-repair-btn');
     if (cancelBtn) {
       cancelBtn.addEventListener('click', () => this.resetForm());

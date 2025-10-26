@@ -6,6 +6,7 @@
     <title>Jlilat Phone Plus - Gestion</title>
     
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <link rel="icon" type="image/png" href="logo.png">
     
@@ -21,6 +22,9 @@
     </header>
 
     <nav class="tab-navigation">
+        <button class="nav-tab" data-page="dashboard">
+            <i class="ph ph-chart-line"></i> <span data-lang="dashboard">Dashboard</span>
+        </button>
         <button class="nav-tab active" data-page="produits">
             <i class="ph ph-package"></i> <span data-lang="products">Produits</span>
         </button>
@@ -39,6 +43,52 @@
     </nav>
 
     <main>
+        <div id="dashboard" class="page-content" style="display:none;">
+            <div class="container">
+                <div class="card">
+                    <h2 class="card-title"><i class="ph ph-chart-line"></i> Tableau de Bord</h2>
+                    
+                    <div class="dashboard-stats">
+                        <div class="stat-card stat-revenue">
+                            <div class="stat-icon"><i class="ph ph-trend-up"></i></div>
+                            <div class="stat-content">
+                                <div class="stat-label">Chiffre d'Affaires Total</div>
+                                <div class="stat-value" id="total-revenue">0.00 DH</div>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-profit">
+                            <div class="stat-icon"><i class="ph ph-currency-circle-dollar"></i></div>
+                            <div class="stat-content">
+                                <div class="stat-label">Bénéfice Total</div>
+                                <div class="stat-value" id="total-profit">0.00 DH</div>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-inventory">
+                            <div class="stat-icon"><i class="ph ph-stack"></i></div>
+                            <div class="stat-content">
+                                <div class="stat-label">Valeur Totale de l'Inventaire</div>
+                                <div class="stat-value" id="total-inventory-value">0.00 DH</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-section">
+                        <h3><i class="ph ph-calendar"></i> Statistiques Quotidiennes (7 derniers jours)</h3>
+                        <div class="chart-container">
+                            <canvas id="dailyChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-section">
+                        <h3><i class="ph ph-calendar-blank"></i> Statistiques Mensuelles (12 derniers mois)</h3>
+                        <div class="chart-container">
+                            <canvas id="monthlyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="produits" class="page-content">
             <div class="container">
                 <div class="card">
@@ -58,8 +108,12 @@
                                 <input type="text" id="product-category" required>
                             </div>
                             <div class="form-group">
-                                <label for="product-price">Prix (DH) *</label>
-                                <input type="number" id="product-price" step="0.01" min="0" required>
+                                <label for="product-buying-price">Prix d'Achat (DH) *</label>
+                                <input type="number" id="product-buying-price" step="0.01" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="product-selling-price">Prix de Vente (DH) *</label>
+                                <input type="number" id="product-selling-price" step="0.01" min="0" required>
                             </div>
                             <div class="form-group">
                                 <label for="product-stock">Stock *</label>
@@ -221,6 +275,10 @@
                                 <input type="number" id="phone-selling-price" min="0" step="0.01" required>
                             </div>
                             <div class="form-group">
+                                <label for="phone-buying-price">Prix d'Achat (DH)</label>
+                                <input type="number" id="phone-buying-price" min="0" step="0.01">
+                            </div>
+                            <div class="form-group">
                                 <label for="phone-warranty-date">Date de Fin de Garantie</label>
                                 <input type="date" id="phone-warranty-date">
                             </div>
@@ -322,6 +380,7 @@
     <script src="sales.js"></script>
     <script src="phones.js"></script>
     <script src="repairs.js"></script>
+    <script src="dashboard.js"></script>
     
     <script src="app.js"></script>
 </body>

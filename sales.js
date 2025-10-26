@@ -133,24 +133,16 @@ class SalesManager {
   }
 
   attachEventListeners() {
-    const addItemBtn = document.getElementById('add-sale-item-btn');
-    if (addItemBtn) {
-      addItemBtn.addEventListener('click', () => this.addItem());
-    }
-
-    const completeSaleBtn = document.getElementById('complete-sale-btn');
-    if (completeSaleBtn) {
-      completeSaleBtn.addEventListener('click', () => this.completeSale());
-    }
-
-    const cancelSaleBtn = document.getElementById('cancel-sale-btn');
-    if (cancelSaleBtn) {
-      cancelSaleBtn.addEventListener('click', () => this.cancelSale());
-    }
-
+    // Button listeners moved to app.js to prevent duplicates
+    // Only the product select listener needs to stay here since it updates the UI
+    // and needs to be re-attached when products change
+    
     const productSelect = document.getElementById('sale-product');
     if (productSelect) {
-      productSelect.addEventListener('change', () => this.updateProductInfo());
+      // Remove old listener first to prevent duplicates
+      productSelect.removeEventListener('change', this.boundUpdateProductInfo);
+      this.boundUpdateProductInfo = () => this.updateProductInfo();
+      productSelect.addEventListener('change', this.boundUpdateProductInfo);
     }
   }
 
@@ -164,7 +156,8 @@ class SalesManager {
       const option = document.createElement('option');
       option.value = product.id;
       option.textContent = `${product.name} (Stock: ${product.stock})`;
-      option.dataset.price = product.price;
+      option.dataset.price = product.sellingPrice || product.price || 0;
+      option.dataset.buyingPrice = product.buyingPrice || 0;
       option.dataset.stock = product.stock;
       select.appendChild(option);
     });
@@ -204,11 +197,17 @@ class SalesManager {
       return;
     }
 
+    // CRITICAL: Snapshot both selling and buying prices at time of sale
+    const sellingPrice = product.sellingPrice || product.price || 0;
+    const buyingPrice = product.buyingPrice || 0;
+
     this.currentSaleItems.push({
       productId: product.id,
       productName: product.name,
       quantity: quantity,
-      unitPrice: product.price
+      unitPrice: sellingPrice,
+      sellingPrice: sellingPrice,
+      buyingPrice: buyingPrice
     });
 
     // Reset form

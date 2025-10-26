@@ -35,7 +35,8 @@ class ProductsManager {
           <tr>
             <th>${FR.products.name}</th>
             <th>${FR.products.category}</th>
-            <th>${FR.products.price}</th>
+            <th>${FR.products.buyingPrice}</th>
+            <th>${FR.products.sellingPrice}</th>
             <th>${FR.products.stock}</th>
             <th>${FR.products.lowStockThreshold}</th>
             <th>${FR.products.actions}</th>
@@ -49,11 +50,15 @@ class ProductsManager {
       const lowStockClass = isLowStock ? 'low-stock' : '';
       const lowStockBadge = isLowStock ? `<span class="badge badge-warning">${FR.products.lowStockAlert}</span>` : '';
 
+      const buyingPrice = product.buyingPrice || 0;
+      const sellingPrice = product.price || product.sellingPrice || 0;
+      
       html += `
         <tr class="${lowStockClass}">
           <td>${this.escapeHtml(product.name)}</td>
           <td>${this.escapeHtml(product.category)}</td>
-          <td>${product.price.toFixed(2)} DH</td>
+          <td>${buyingPrice.toFixed(2)} DH</td>
+          <td>${sellingPrice.toFixed(2)} DH</td>
           <td>${product.stock} ${lowStockBadge}</td>
           <td>${product.low_stock_threshold}</td>
           <td>
@@ -73,11 +78,9 @@ class ProductsManager {
   }
 
   attachEventListeners() {
-    const form = document.getElementById('product-form');
-    if (form) {
-      form.addEventListener('submit', (e) => this.handleSubmit(e));
-    }
-
+    // Form submit listener is now in app.js to prevent duplicates
+    // Only attach listeners for elements that are re-created on render
+    
     const cancelBtn = document.getElementById('cancel-product-btn');
     if (cancelBtn) {
       cancelBtn.addEventListener('click', () => this.resetForm());
@@ -89,11 +92,12 @@ class ProductsManager {
 
     const name = document.getElementById('product-name').value.trim();
     const category = document.getElementById('product-category').value.trim();
-    const price = parseFloat(document.getElementById('product-price').value);
+    const buyingPrice = parseFloat(document.getElementById('product-buying-price').value);
+    const sellingPrice = parseFloat(document.getElementById('product-selling-price').value);
     const stock = parseInt(document.getElementById('product-stock').value);
     const low_stock_threshold = parseInt(document.getElementById('product-threshold').value);
 
-    if (!name || !category || isNaN(price) || isNaN(stock) || isNaN(low_stock_threshold)) {
+    if (!name || !category || isNaN(buyingPrice) || isNaN(sellingPrice) || isNaN(stock) || isNaN(low_stock_threshold)) {
       alert('Veuillez remplir tous les champs correctement');
       return;
     }
@@ -106,7 +110,9 @@ class ProductsManager {
           ...this.products[index],
           name,
           category,
-          price,
+          buyingPrice,
+          sellingPrice,
+          price: sellingPrice, // Keep for backward compatibility
           stock,
           low_stock_threshold
         };
@@ -119,7 +125,9 @@ class ProductsManager {
         id: crypto.randomUUID(),
         name,
         category,
-        price,
+        buyingPrice,
+        sellingPrice,
+        price: sellingPrice, // Keep for backward compatibility
         stock,
         low_stock_threshold
       };
@@ -140,7 +148,8 @@ class ProductsManager {
 
     document.getElementById('product-name').value = product.name;
     document.getElementById('product-category').value = product.category;
-    document.getElementById('product-price').value = product.price;
+    document.getElementById('product-buying-price').value = product.buyingPrice || 0;
+    document.getElementById('product-selling-price').value = product.sellingPrice || product.price || 0;
     document.getElementById('product-stock').value = product.stock;
     document.getElementById('product-threshold').value = product.low_stock_threshold;
 
