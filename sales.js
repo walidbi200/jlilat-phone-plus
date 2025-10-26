@@ -296,10 +296,21 @@ class SalesManager {
   async deleteSale(id) {
     if (!confirm(fr.sales.deleteConfirm)) return;
 
-    this.sales = this.sales.filter(s => s.id !== id);
-    await this.saveSales();
-    this.showNotification(fr.sales.deleteSuccess);
-    this.render();
+    try {
+      // Delete from Firebase
+      await storage.deleteSale(id);
+      
+      // Reload data from Firebase
+      await this.loadSales();
+      
+      // Re-render the table
+      this.render();
+      
+      this.showNotification(fr.sales.deleteSuccess);
+    } catch (error) {
+      console.error('Error deleting sale:', error);
+      alert('Erreur lors de la suppression: ' + error.message);
+    }
   }
 
   getPaymentMethodLabel(method) {

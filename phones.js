@@ -216,10 +216,21 @@ class PhonesManager {
   async deletePhone(id) {
     if (!confirm(fr.phones.deleteConfirm)) return;
 
-    this.phones = this.phones.filter(p => p.id !== id);
-    await this.savePhones();
-    this.showNotification(fr.phones.deleteSuccess);
-    this.render();
+    try {
+      // Delete from Firebase
+      await storage.deletePhone(id);
+      
+      // Reload data from Firebase
+      await this.loadPhones();
+      
+      // Re-render the table
+      this.render();
+      
+      this.showNotification(fr.phones.deleteSuccess);
+    } catch (error) {
+      console.error('Error deleting phone:', error);
+      alert('Erreur lors de la suppression: ' + error.message);
+    }
   }
 
   resetForm() {

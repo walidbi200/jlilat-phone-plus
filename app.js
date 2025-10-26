@@ -232,29 +232,56 @@ function initDataManagementPage() {
       try {
         const fileContent = await readFile(file);
         const data = JSON.parse(fileContent);
-        await storage.importData(data);
         
-        // Reload all data
-        await productsManager.loadProducts();
-        await salesManager.loadSales();
-        await phonesManager.loadPhones();
-        await repairsManager.loadRepairs();
+        // Use Firebase Batch Write for speed and safety
+        const batch = db.batch();
+        const userId = auth.currentUser.uid;
+
+        // Import products
+        if (data.products && Array.isArray(data.products)) {
+          data.products.forEach(product => {
+            const docRef = db.collection('users').doc(userId).collection('products').doc(product.id);
+            batch.set(docRef, product); // .set() will overwrite or create
+          });
+        }
+
+        // Import sales
+        if (data.sales && Array.isArray(data.sales)) {
+          data.sales.forEach(sale => {
+            const docRef = db.collection('users').doc(userId).collection('sales').doc(sale.id);
+            batch.set(docRef, sale);
+          });
+        }
+
+        // Import phones
+        if (data.phones && Array.isArray(data.phones)) {
+          data.phones.forEach(phone => {
+            const docRef = db.collection('users').doc(userId).collection('phones').doc(phone.id);
+            batch.set(docRef, phone);
+          });
+        }
+
+        // Import repairs
+        if (data.repairs && Array.isArray(data.repairs)) {
+          data.repairs.forEach(repair => {
+            const docRef = db.collection('users').doc(userId).collection('repairs').doc(repair.id);
+            batch.set(docRef, repair);
+          });
+        }
         
-        // Refresh displays
-        productsManager.render();
-        salesManager.render();
-        salesManager.populateProductSelect();
-        phonesManager.render();
-        repairsManager.render();
-        
-        // Reset file input
-        importInput.value = '';
-        restoreBtn.disabled = true;
+        // Commit all changes to Firestore at once
+        await batch.commit();
         
         showToast(fr.dataManagement.importSuccess || 'Données restaurées avec succès');
+        
+        // Reload the entire page to force all scripts to re-fetch from Firebase
+        setTimeout(() => {
+          location.reload();
+        }, 1500);
+        
       } catch (error) {
         console.error('Import error:', error);
-        showToast(fr.dataManagement.importError || 'Erreur lors de l\'importation', true);
+        showToast(fr.dataManagement.importError || 'Erreur lors de l\'importation: ' + error.message, true);
       }
     };
   }

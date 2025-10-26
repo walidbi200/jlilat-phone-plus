@@ -163,10 +163,21 @@ class ProductsManager {
   async deleteProduct(id) {
     if (!confirm(fr.products.deleteConfirm)) return;
 
-    this.products = this.products.filter(p => p.id !== id);
-    await this.saveProducts();
-    this.showNotification(fr.products.deleteSuccess);
-    this.render();
+    try {
+      // Delete from Firebase
+      await storage.deleteProduct(id);
+      
+      // Reload data from Firebase
+      await this.loadProducts();
+      
+      // Re-render the table
+      this.render();
+      
+      this.showNotification(fr.products.deleteSuccess);
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      alert('Erreur lors de la suppression: ' + error.message);
+    }
   }
 
   resetForm() {
