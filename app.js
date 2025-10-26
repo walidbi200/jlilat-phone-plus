@@ -39,6 +39,12 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error("initProductsPage function not found. Did you include products.js?");
   }
 
+  // --- INITIALIZE BARCODE SCANNER ---
+  if (typeof initBarcodeScanner === 'function') {
+      initBarcodeScanner();
+      console.log('Barcode scanner module loaded');
+  }
+
   // --- ADD FORM LISTENERS ONCE (Fixed: Prevents duplicate submissions) ---
   const productForm = document.getElementById('product-form');
   if (productForm) {

@@ -8,6 +8,9 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- ZXing Barcode Scanner Library -->
+    <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
+    
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -145,6 +148,15 @@
                             <div class="form-group">
                                 <label for="product-threshold">Seuil de Stock Faible *</label>
                                 <input type="number" id="product-threshold" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="product-barcode">Code-barres (Optionnel)</label>
+                                <div class="input-with-button">
+                                    <input type="text" id="product-barcode" placeholder="Scannez ou saisissez">
+                                    <button type="button" id="scan-barcode-btn" class="btn btn-secondary">
+                                        <i class="ph ph-camera"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="form-actions">
@@ -403,7 +415,20 @@
     <script src="phones.js"></script>
     <script src="repairs.js"></script>
     <script src="dashboard.js"></script>
+    <script src="scanner.js"></script>
     
     <script src="app.js"></script>
+
+    <!-- Barcode Scanner Modal -->
+    <div id="scanner-modal" class="scanner-modal">
+        <div class="scanner-container">
+            <h3 style="margin-bottom: 1rem;">Scanner le code-barres</h3>
+            <video id="scanner-video" style="width: 100%;"></video>
+            <button id="scanner-close-btn" class="btn btn-danger">
+                <i class="ph ph-x"></i> Annuler
+            </button>
+        </div>
+    </div>
+
 </body>
 </html>
