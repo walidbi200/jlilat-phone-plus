@@ -8,6 +8,29 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- ZXing Barcode Scanner Library -->
+    <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyAcqaRG6GFjC6ifva2aqpwA4slo3vhEExY",
+        authDomain: "jlilat.firebaseapp.com",
+        projectId: "jlilat",
+        storageBucket: "jlilat.firebasestorage.app",
+        messagingSenderId: "530537593021",
+        appId: "1:530537593021:web:2c2ffa3bb4075e9fb39fd4",
+        measurementId: "G-0RJQCSJELB"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+    
     <link rel="icon" type="image/png" href="logo.png">
     
     <link rel="stylesheet" href="styles.css">
@@ -19,6 +42,9 @@
             <img src="logo.png" alt="Logo" class="header-logo">
             Jlilat Phone Plus
         </h1>
+        <button id="logout-btn" class="btn btn-secondary btn-sm">
+            <i class="ph ph-sign-out"></i> Déconnexion
+        </button>
     </header>
 
     <nav class="tab-navigation">
@@ -36,6 +62,9 @@
         </button>
         <button class="nav-tab" data-page="reparations">
             <i class="ph ph-wrench"></i> <span data-lang="repairs">Réparations</span>
+        </button>
+        <button class="nav-tab" data-page="credits">
+            <i class="ph ph-users-three"></i> <span data-lang="credits">Crédits</span>
         </button>
         <button class="nav-tab" data-page="data">
             <i class="ph ph-database"></i> <span data-lang="data_management">Gestion des Données</span>
@@ -122,6 +151,15 @@
                             <div class="form-group">
                                 <label for="product-threshold">Seuil de Stock Faible *</label>
                                 <input type="number" id="product-threshold" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="product-barcode">Code-barres (Optionnel)</label>
+                                <div class="input-with-button">
+                                    <input type="text" id="product-barcode" placeholder="Scannez ou saisissez">
+                                    <button type="button" id="scan-barcode-btn" class="btn btn-secondary">
+                                        <i class="ph ph-camera"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="form-actions">
@@ -344,6 +382,105 @@
             </div>
         </div>
 
+        <!-- Credits Page -->
+        <div id="credits" class="page-content" style="display:none;">
+            <div class="container">
+                <!-- Stats Card -->
+                <div class="stats-cards">
+                    <div class="stat-card stat-warning">
+                        <div class="stat-icon"><i class="ph ph-warning-circle"></i></div>
+                        <div class="stat-content">
+                            <div class="stat-label" data-lang="totalCreditOwed">Total des Crédits Clients</div>
+                            <div class="stat-value" id="total-credit-value">0.00 DH</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2-cols">
+                    <!-- Client List Card -->
+                    <div class="card">
+                        <h2 class="card-title">
+                            <i class="ph ph-users-three"></i> 
+                            <span data-lang="clientList">Liste des Clients</span>
+                        </h2>
+                        <div class="table-container">
+                            <table id="clients-table">
+                                <thead>
+                                    <tr>
+                                        <th data-lang="clientName">Nom</th>
+                                        <th data-lang="clientPhone">Téléphone</th>
+                                        <th data-lang="totalDebt">Dette Totale</th>
+                                        <th data-lang="amountPaid">Payé</th>
+                                        <th data-lang="remainingBalance">Reste</th>
+                                        <th data-lang="actions">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clients-table-body">
+                                    <!-- Rows will be added dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Add Client Form Card -->
+                    <div class="card">
+                        <h2 class="card-title" id="client-form-title">
+                            <i class="ph ph-user-plus"></i> 
+                            <span data-lang="addClient">Ajouter un Client</span>
+                        </h2>
+                        <form id="add-client-form" class="form-grid">
+                            <input type="hidden" id="client-id">
+                            
+                            <div class="form-group">
+                                <label for="client-name" data-lang="clientName">Nom du Client</label>
+                                <input type="text" id="client-name" required placeholder="Nom complet">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="client-phone" data-lang="clientPhone">Téléphone</label>
+                                <input type="tel" id="client-phone" required placeholder="06XXXXXXXX">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="client-debt" data-lang="totalDebt">Dette Totale (DH)</label>
+                                <input type="number" id="client-debt" min="0" step="0.01" required placeholder="0.00">
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="ph ph-floppy-disk"></i> <span data-lang="save">Enregistrer</span>
+                                </button>
+                                <button type="button" id="cancel-client-btn" class="btn btn-secondary" style="display: none;">
+                                    <i class="ph ph-x-circle"></i> <span data-lang="cancel">Annuler</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Modal -->
+        <div id="payment-modal" class="scanner-modal">
+            <div class="scanner-container">
+                <h3 style="margin-bottom: 1rem;" data-lang="addPayment">Ajouter un Paiement</h3>
+                <form id="payment-form">
+                    <div class="form-group">
+                        <label for="payment-amount" data-lang="paymentAmount">Montant du Paiement (DH)</label>
+                        <input type="number" id="payment-amount" min="0" step="0.01" required placeholder="0.00">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="ph ph-check"></i> <span data-lang="save">Enregistrer</span>
+                        </button>
+                        <button type="button" id="payment-close-btn" class="btn btn-danger">
+                            <i class="ph ph-x"></i> <span data-lang="cancel">Annuler</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div id="data" class="page-content" style="display:none;">
             <div class="card" style="max-width: 900px; margin: 0 auto;">
                 <h2 class="card-title"><i class="ph ph-database"></i> Gestion des Données</h2>
@@ -372,7 +509,6 @@
 
     <div id="toast-notification" class="toast"></div>
     
-    <script src="libs/localforage.min.js"></script>
     <script src="locale/fr.js"></script>
     <script src="storage.js"></script>
     
@@ -381,7 +517,21 @@
     <script src="phones.js"></script>
     <script src="repairs.js"></script>
     <script src="dashboard.js"></script>
+    <script src="scanner.js"></script>
+    <script src="credits.js"></script>
     
     <script src="app.js"></script>
+
+    <!-- Barcode Scanner Modal -->
+    <div id="scanner-modal" class="scanner-modal">
+        <div class="scanner-container">
+            <h3 style="margin-bottom: 1rem;">Scanner le code-barres</h3>
+            <video id="scanner-video" style="width: 100%;"></video>
+            <button id="scanner-close-btn" class="btn btn-danger">
+                <i class="ph ph-x"></i> Annuler
+            </button>
+        </div>
+    </div>
+
 </body>
 </html>

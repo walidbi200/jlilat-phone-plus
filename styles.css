@@ -818,7 +818,161 @@ table tfoot td {
 }
 
 /* ========================================
-   14. PRINT STYLES
+   14. LOGIN PAGE STYLES
+   ======================================== */
+
+.login-body {
+  background-color: var(--bg-light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: var(--spacing-md);
+}
+
+.login-container {
+  width: 100%;
+  max-width: 450px;
+}
+
+.login-container header {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.login-container header h1 {
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--dark-text);
+}
+
+.login-container .card {
+  padding: var(--spacing-xl);
+}
+
+.login-container .card-title {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+  font-size: 1.5rem;
+}
+
+.login-container .form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.login-container .form-actions {
+  margin-top: var(--spacing-xl);
+}
+
+.login-container .btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.error-message {
+  color: var(--danger-color);
+  margin-top: var(--spacing-md);
+  font-weight: 500;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+/* ========================================
+   15. HEADER LOGOUT BUTTON
+   ======================================== */
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#logout-btn {
+  margin-left: auto;
+}
+
+/* ========================================
+   16. BARCODE SCANNER STYLES
+   ======================================== */
+
+/* Input with button layout (for barcode field + scan button) */
+.input-with-button {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.input-with-button input {
+  flex-grow: 1;
+}
+
+.input-with-button .btn {
+  padding: 0.75rem;
+  min-width: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-with-button .btn i {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* Scanner Modal */
+.scanner-modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+  align-items: center;
+  justify-content: center;
+}
+
+/* Show modal when active */
+.scanner-modal.active {
+  display: flex;
+}
+
+.scanner-container {
+  background-color: var(--bg-white);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.scanner-container h3 {
+  color: var(--dark-text);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.scanner-container video {
+  border-radius: var(--radius-md);
+  background-color: #000;
+  width: 100%;
+  max-height: 400px;
+  margin-bottom: var(--spacing-md);
+}
+
+.scanner-container button {
+  margin-top: var(--spacing-md);
+  width: 100%;
+}
+
+/* ========================================
+   17. PRINT STYLES
    ======================================== */
 
 @media print {
@@ -832,4 +986,90 @@ table tfoot td {
     box-shadow: none;
     border: 1px solid #000;
   }
+}
+
+/* ---
+9. LOGIN PAGE
+--- */
+.login-body {
+    background-color: var(--bg-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.login-container {
+    width: 100%;
+    max-width: 450px;
+    margin: 2rem;
+}
+.login-container header {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 2rem;
+}
+.login-container header h1 {
+    justify-content: center;
+}
+.error-message {
+    color: var(--danger-color);
+    margin-top: 1rem;
+    font-weight: 500;
+}
+
+/* ========================================
+   10. CREDITS PAGE STYLES
+   ======================================== */
+
+/* Stats cards container */
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Warning stat card variant */
+.stat-card.stat-warning {
+    background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+    border-left: 4px solid var(--warning-color);
+}
+
+.stat-card.stat-warning .stat-icon {
+    color: var(--warning-color);
+}
+
+.stat-card.stat-warning .stat-value {
+    color: #92400e;
+}
+
+/* Two-column grid layout */
+.grid-2-cols {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-xl);
+}
+
+/* Mobile responsive for grid */
+@media (max-width: 1024px) {
+    .grid-2-cols {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Optimize table for mobile */
+@media (max-width: 768px) {
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    .table-container table {
+        min-width: 600px;
+    }
+    
+    .stat-card .stat-value {
+        font-size: 1.5rem;
+    }
 }

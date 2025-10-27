@@ -1,4 +1,28 @@
+// Authentication Check
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+      // User is signed in. Allow app to run.
+      console.log("Welcome!", user.email);
+  } else {
+      // User is signed out. Redirect to login.
+      window.location.href = "login.html";
+  }
+});
+
+// ===============================================
+// MAIN APPLICATION
+// ===============================================
 document.addEventListener('DOMContentLoaded', () => {
+  // Logout button handler
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      firebase.auth().signOut().then(() => {
+        window.location.href = 'login.html';
+      });
+    });
+  }
+
   // Set initial page on load
   showPage('produits');
   // We must call the init function for the default page
@@ -6,6 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
       initProductsPage();
   } else {
       console.error("initProductsPage function not found. Did you include products.js?");
+  }
+
+  // --- INITIALIZE BARCODE SCANNER ---
+  if (typeof initBarcodeScanner === 'function') {
+      initBarcodeScanner();
+      console.log('Barcode scanner module loaded');
   }
 
   // --- ADD FORM LISTENERS ONCE (Fixed: Prevents duplicate submissions) ---
@@ -32,6 +62,43 @@ document.addEventListener('DOMContentLoaded', () => {
       repairForm.addEventListener('submit', (e) => {
           if (typeof repairsManager !== 'undefined') {
               repairsManager.handleSubmit(e);
+          }
+      });
+  }
+
+  // Credits module form listeners
+  const clientForm = document.getElementById('add-client-form');
+  if (clientForm) {
+      clientForm.addEventListener('submit', (e) => {
+          if (typeof creditsManager !== 'undefined') {
+              creditsManager.handleSubmit(e);
+          }
+      });
+  }
+
+  const cancelClientBtn = document.getElementById('cancel-client-btn');
+  if (cancelClientBtn) {
+      cancelClientBtn.addEventListener('click', () => {
+          if (typeof creditsManager !== 'undefined') {
+              creditsManager.resetForm();
+          }
+      });
+  }
+
+  const paymentForm = document.getElementById('payment-form');
+  if (paymentForm) {
+      paymentForm.addEventListener('submit', (e) => {
+          if (typeof creditsManager !== 'undefined') {
+              creditsManager.handlePaymentSubmit(e);
+          }
+      });
+  }
+
+  const paymentCloseBtn = document.getElementById('payment-close-btn');
+  if (paymentCloseBtn) {
+      paymentCloseBtn.addEventListener('click', () => {
+          if (typeof creditsManager !== 'undefined') {
+              creditsManager.closePaymentModal();
           }
       });
   }
@@ -94,6 +161,9 @@ document.addEventListener('DOMContentLoaded', () => {
                   break;
               case 'reparations':
                   if (typeof initRepairsPage === 'function') initRepairsPage();
+                  break;
+              case 'credits':
+                  if (typeof initCreditsPage === 'function') initCreditsPage();
                   break;
               case 'data':
                   if (typeof initDataManagementPage === 'function') initDataManagementPage();
@@ -201,29 +271,56 @@ function initDataManagementPage() {
       try {
         const fileContent = await readFile(file);
         const data = JSON.parse(fileContent);
-        await storage.importData(data);
         
-        // Reload all data
-        await productsManager.loadProducts();
-        await salesManager.loadSales();
-        await phonesManager.loadPhones();
-        await repairsManager.loadRepairs();
+        // Use Firebase Batch Write for speed and safety
+        const batch = db.batch();
+        const userId = auth.currentUser.uid;
+
+        // Import products
+        if (data.products && Array.isArray(data.products)) {
+          data.products.forEach(product => {
+            const docRef = db.collection('users').doc(userId).collection('products').doc(product.id);
+            batch.set(docRef, product); // .set() will overwrite or create
+          });
+        }
+
+        // Import sales
+        if (data.sales && Array.isArray(data.sales)) {
+          data.sales.forEach(sale => {
+            const docRef = db.collection('users').doc(userId).collection('sales').doc(sale.id);
+            batch.set(docRef, sale);
+          });
+        }
+
+        // Import phones
+        if (data.phones && Array.isArray(data.phones)) {
+          data.phones.forEach(phone => {
+            const docRef = db.collection('users').doc(userId).collection('phones').doc(phone.id);
+            batch.set(docRef, phone);
+          });
+        }
+
+        // Import repairs
+        if (data.repairs && Array.isArray(data.repairs)) {
+          data.repairs.forEach(repair => {
+            const docRef = db.collection('users').doc(userId).collection('repairs').doc(repair.id);
+            batch.set(docRef, repair);
+          });
+        }
         
-        // Refresh displays
-        productsManager.render();
-        salesManager.render();
-        salesManager.populateProductSelect();
-        phonesManager.render();
-        repairsManager.render();
-        
-        // Reset file input
-        importInput.value = '';
-        restoreBtn.disabled = true;
+        // Commit all changes to Firestore at once
+        await batch.commit();
         
         showToast(fr.dataManagement.importSuccess || 'Données restaurées avec succès');
+        
+        // Reload the entire page to force all scripts to re-fetch from Firebase
+        setTimeout(() => {
+          location.reload();
+        }, 1500);
+        
       } catch (error) {
         console.error('Import error:', error);
-        showToast(fr.dataManagement.importError || 'Erreur lors de l\'importation', true);
+        showToast(fr.dataManagement.importError || 'Erreur lors de l\'importation: ' + error.message, true);
       }
     };
   }

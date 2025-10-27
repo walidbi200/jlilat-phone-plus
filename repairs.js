@@ -163,10 +163,21 @@ class RepairsManager {
   async deleteRepair(id) {
     if (!confirm(fr.repairs.deleteConfirm)) return;
 
-    this.repairs = this.repairs.filter(r => r.id !== id);
-    await this.saveRepairs();
-    this.showNotification(fr.repairs.deleteSuccess);
-    this.render();
+    try {
+      // Delete from Firebase
+      await storage.deleteRepair(id);
+      
+      // Reload data from Firebase
+      await this.loadRepairs();
+      
+      // Re-render the table
+      this.render();
+      
+      this.showNotification(fr.repairs.deleteSuccess);
+    } catch (error) {
+      console.error('Error deleting repair:', error);
+      alert('Erreur lors de la suppression: ' + error.message);
+    }
   }
 
   resetForm() {

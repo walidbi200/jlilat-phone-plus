@@ -96,6 +96,7 @@ class ProductsManager {
     const sellingPrice = parseFloat(document.getElementById('product-selling-price').value);
     const stock = parseInt(document.getElementById('product-stock').value);
     const low_stock_threshold = parseInt(document.getElementById('product-threshold').value);
+    const barcode = document.getElementById('product-barcode').value.trim();
 
     if (!name || !category || isNaN(buyingPrice) || isNaN(sellingPrice) || isNaN(stock) || isNaN(low_stock_threshold)) {
       alert('Veuillez remplir tous les champs correctement');
@@ -114,7 +115,8 @@ class ProductsManager {
           sellingPrice,
           price: sellingPrice, // Keep for backward compatibility
           stock,
-          low_stock_threshold
+          low_stock_threshold,
+          barcode: barcode || ''
         };
         await this.saveProducts();
         this.showNotification(fr.products.updateSuccess);
@@ -129,7 +131,8 @@ class ProductsManager {
         sellingPrice,
         price: sellingPrice, // Keep for backward compatibility
         stock,
-        low_stock_threshold
+        low_stock_threshold,
+        barcode: barcode || ''
       };
       this.products.push(newProduct);
       await this.saveProducts();
@@ -152,6 +155,7 @@ class ProductsManager {
     document.getElementById('product-selling-price').value = product.sellingPrice || product.price || 0;
     document.getElementById('product-stock').value = product.stock;
     document.getElementById('product-threshold').value = product.low_stock_threshold;
+    document.getElementById('product-barcode').value = product.barcode || '';
 
     const formTitle = document.getElementById('product-form-title');
     if (formTitle) {
@@ -163,10 +167,21 @@ class ProductsManager {
   async deleteProduct(id) {
     if (!confirm(fr.products.deleteConfirm)) return;
 
-    this.products = this.products.filter(p => p.id !== id);
-    await this.saveProducts();
-    this.showNotification(fr.products.deleteSuccess);
-    this.render();
+    try {
+      // Delete from Firebase
+      await storage.deleteProduct(id);
+      
+      // Reload data from Firebase
+      await this.loadProducts();
+      
+      // Re-render the table
+      this.render();
+      
+      this.showNotification(fr.products.deleteSuccess);
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      alert('Erreur lors de la suppression: ' + error.message);
+    }
   }
 
   resetForm() {
