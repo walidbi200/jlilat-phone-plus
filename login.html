@@ -4,12 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - Jlilat Phone Plus</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
     
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
     <script>
+      // Firebase Configuration
       const firebaseConfig = {
         apiKey: "AIzaSyAcqaRG6GFjC6ifva2aqpwA4slo3vhEExY",
         authDomain: "jlilat.firebaseapp.com",
@@ -26,31 +38,112 @@
     <link rel="icon" type="image/png" href="logo.png">
 </head>
 <body class="login-body">
-    <div class="login-container">
-        <header>
-            <h1>
-                <img src="logo.png" alt="Logo" class="header-logo"> 
-                Jlilat Phone Plus
-            </h1>
-        </header>
-        <div class="card">
-            <h2 class="card-title">Connexion</h2>
-            <form id="login-form" class="form-grid">
-                <div class="form-group">
-                    <label for="login-email">Email</label>
-                    <input type="email" id="login-email" required>
+    <!-- Animated Background -->
+    <div class="login-bg-animation">
+        <div class="login-circle login-circle-1"></div>
+        <div class="login-circle login-circle-2"></div>
+        <div class="login-circle login-circle-3"></div>
+    </div>
+
+    <!-- Login Container -->
+    <div class="login-container-modern">
+        <!-- Login Card -->
+        <div class="login-card-modern">
+            <!-- Logo Section -->
+            <div class="login-logo-section">
+                <img src="logo.png" alt="Jlilat Logo" class="login-logo">
+                <h1 class="login-title">Jlilat Phone Plus</h1>
+                <p class="login-tagline">Bienvenue dans votre espace de gestion</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="login-form-modern">
+                <!-- Email Input Group -->
+                <div class="login-input-group">
+                    <div class="login-input-icon">
+                        <i class="ph ph-envelope-simple"></i>
+                    </div>
+                    <input 
+                        type="email" 
+                        id="login-email" 
+                        class="login-input-modern" 
+                        placeholder="Adresse e-mail"
+                        required
+                        autocomplete="email"
+                    >
                 </div>
-                <div class="form-group">
-                    <label for="login-password">Mot de passe</label>
-                    <input type="password" id="login-password" required>
+
+                <!-- Password Input Group -->
+                <div class="login-input-group">
+                    <div class="login-input-icon">
+                        <i class="ph ph-lock"></i>
+                    </div>
+                    <input 
+                        type="password" 
+                        id="login-password" 
+                        class="login-input-modern" 
+                        placeholder="Mot de passe"
+                        required
+                        autocomplete="current-password"
+                    >
+                    <button type="button" class="login-toggle-password" id="toggle-password">
+                        <i class="ph ph-eye"></i>
+                    </button>
                 </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Se Connecter</button>
+
+                <!-- Error Message -->
+                <div id="login-error" class="login-error-modern"></div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="login-btn-modern">
+                    <span class="login-btn-text">Se Connecter</span>
+                    <i class="ph ph-arrow-right login-btn-icon"></i>
+                </button>
+
+                <!-- Loading State (hidden by default) -->
+                <div class="login-loading" id="login-loading" style="display: none;">
+                    <div class="login-spinner"></div>
+                    <span>Connexion en cours...</span>
                 </div>
-                <p id="login-error" class="error-message"></p>
             </form>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <p class="login-footer-text">
+                    <i class="ph ph-shield-check"></i>
+                    Connexion sécurisée par Firebase
+                </p>
+            </div>
+        </div>
+
+        <!-- Version Info -->
+        <div class="login-version">
+            <p>Version 1.5 • © 2025 Jlilat Phone Plus</p>
         </div>
     </div>
+    
     <script src="login.js"></script>
+    
+    <!-- Toggle Password Visibility Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('toggle-password');
+            const passwordInput = document.getElementById('login-password');
+            
+            if (toggleBtn && passwordInput) {
+                toggleBtn.addEventListener('click', () => {
+                    const type = passwordInput.type === 'password' ? 'text' : 'password';
+                    passwordInput.type = type;
+                    
+                    const icon = toggleBtn.querySelector('i');
+                    if (type === 'password') {
+                        icon.className = 'ph ph-eye';
+                    } else {
+                        icon.className = 'ph ph-eye-slash';
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

@@ -161,6 +161,34 @@ const fr = {
     noData: "Aucune donnée disponible pour cette période"
   },
 
+  credits: {
+    title: "Crédits",
+    management: "Gestion des Crédits",
+    addClient: "Ajouter un Client",
+    editClient: "Modifier le Client",
+    clientName: "Nom du Client",
+    clientPhone: "Téléphone",
+    totalDebt: "Dette Totale (DH)",
+    amountPaid: "Montant Payé (DH)",
+    remainingBalance: "Solde Restant (DH)",
+    totalCreditOwed: "Total des Crédits Clients",
+    addPayment: "Ajouter un Paiement",
+    paymentAmount: "Montant du Paiement",
+    clientList: "Liste des Clients",
+    actions: "Actions",
+    edit: "Modifier",
+    delete: "Supprimer",
+    save: "Enregistrer",
+    cancel: "Annuler",
+    deleteConfirm: "Êtes-vous sûr de vouloir supprimer ce client ?",
+    addSuccess: "Client ajouté avec succès",
+    updateSuccess: "Client mis à jour avec succès",
+    deleteSuccess: "Client supprimé avec succès",
+    paymentSuccess: "Paiement ajouté avec succès",
+    noClients: "Aucun client. Ajoutez-en un pour commencer.",
+    invalidAmount: "Veuillez entrer un montant valide"
+  },
+
   common: {
     search: "Rechercher",
     loading: "Chargement...",

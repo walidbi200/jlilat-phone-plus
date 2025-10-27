@@ -66,6 +66,43 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
+  // Credits module form listeners
+  const clientForm = document.getElementById('add-client-form');
+  if (clientForm) {
+      clientForm.addEventListener('submit', (e) => {
+          if (typeof creditsManager !== 'undefined') {
+              creditsManager.handleSubmit(e);
+          }
+      });
+  }
+
+  const cancelClientBtn = document.getElementById('cancel-client-btn');
+  if (cancelClientBtn) {
+      cancelClientBtn.addEventListener('click', () => {
+          if (typeof creditsManager !== 'undefined') {
+              creditsManager.resetForm();
+          }
+      });
+  }
+
+  const paymentForm = document.getElementById('payment-form');
+  if (paymentForm) {
+      paymentForm.addEventListener('submit', (e) => {
+          if (typeof creditsManager !== 'undefined') {
+              creditsManager.handlePaymentSubmit(e);
+          }
+      });
+  }
+
+  const paymentCloseBtn = document.getElementById('payment-close-btn');
+  if (paymentCloseBtn) {
+      paymentCloseBtn.addEventListener('click', () => {
+          if (typeof creditsManager !== 'undefined') {
+              creditsManager.closePaymentModal();
+          }
+      });
+  }
+
   // Sales module button listeners (Fixed: Prevents duplicate submissions)
   const addSaleItemBtn = document.getElementById('add-sale-item-btn');
   if (addSaleItemBtn) {
@@ -124,6 +161,9 @@ document.addEventListener('DOMContentLoaded', () => {
                   break;
               case 'reparations':
                   if (typeof initRepairsPage === 'function') initRepairsPage();
+                  break;
+              case 'credits':
+                  if (typeof initCreditsPage === 'function') initCreditsPage();
                   break;
               case 'data':
                   if (typeof initDataManagementPage === 'function') initDataManagementPage();
