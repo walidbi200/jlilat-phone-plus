@@ -2,10 +2,7 @@
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-// This is the new storage object
 const storage = {
-
-    // --- PRODUCTS ---
     getProducts: async () => {
         const userId = auth.currentUser?.uid;
         if (!userId) return [];
@@ -22,8 +19,6 @@ const storage = {
         if (!userId) return;
         return db.collection('users').doc(userId).collection('products').doc(productId).delete();
     },
-
-    // --- SALES ---
     getSales: async () => {
         const userId = auth.currentUser?.uid;
         if (!userId) return [];
@@ -35,8 +30,6 @@ const storage = {
         if (!userId) return;
         return db.collection('users').doc(userId).collection('sales').doc(sale.id).set(sale);
     },
-
-    // --- PHONES ---
     getPhones: async () => {
         const userId = auth.currentUser?.uid;
         if (!userId) return [];
@@ -53,8 +46,6 @@ const storage = {
         if (!userId) return;
         return db.collection('users').doc(userId).collection('phones').doc(phoneId).delete();
     },
-
-    // --- REPAIRS ---
     getRepairs: async () => {
         const userId = auth.currentUser?.uid;
         if (!userId) return [];
@@ -71,8 +62,6 @@ const storage = {
         if (!userId) return;
         return db.collection('users').doc(userId).collection('repairs').doc(repairId).delete();
     },
-    
-    // --- DATA MIGRATION ---
     exportData: async () => {
         alert("Export must be updated for Firebase.");
     },
