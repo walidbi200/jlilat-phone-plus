@@ -1,12 +1,12 @@
 // Authentication Check
 firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-        // User is signed in. Allow app to run.
-        console.log("Welcome!", user.email);
-    } else {
-        // User is signed out. Redirect to login.
-        window.location.href = "login.html";
-    }
+  if (user) {
+      // User is signed in. Allow app to run.
+      console.log("Welcome!", user.email);
+  } else {
+      // User is signed out. Redirect to login.
+      window.location.href = "login.html";
+  }
 });
 
 // ===============================================
