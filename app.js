@@ -1,27 +1,10 @@
-// ===============================================
-// AUTHENTICATION CHECK
-// ===============================================
-// Redirect to login if user is not authenticated
+// Authentication Check
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-        // User is signed in
-        console.log('Welcome!', user.email);
-        
-        // Add logout button functionality
-        const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', async () => {
-                try {
-                    await firebase.auth().signOut();
-                    window.location.href = 'login.html';
-                } catch (error) {
-                    console.error('Logout error:', error);
-                }
-            });
-        }
+        // User is signed in. Allow app to run.
+        console.log("Welcome!", user.email);
     } else {
-        // User is signed out - redirect to login
-        console.log('No user authenticated, redirecting to login...');
+        // User is signed out. Redirect to login.
         window.location.href = "login.html";
     }
 });
@@ -30,6 +13,16 @@ firebase.auth().onAuthStateChanged((user) => {
 // MAIN APPLICATION
 // ===============================================
 document.addEventListener('DOMContentLoaded', () => {
+  // Logout button handler
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      firebase.auth().signOut().then(() => {
+        window.location.href = 'login.html';
+      });
+    });
+  }
+
   // Set initial page on load
   showPage('produits');
   // We must call the init function for the default page

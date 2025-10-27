@@ -987,3 +987,34 @@ header {
     border: 1px solid #000;
   }
 }
+
+/* ---
+9. LOGIN PAGE
+--- */
+.login-body {
+    background-color: var(--bg-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.login-container {
+    width: 100%;
+    max-width: 450px;
+    margin: 2rem;
+}
+.login-container header {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 2rem;
+}
+.login-container header h1 {
+    justify-content: center;
+}
+.error-message {
+    color: var(--danger-color);
+    margin-top: 1rem;
+    font-weight: 500;
+}
