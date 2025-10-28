@@ -13,7 +13,13 @@ class RepairsManager {
   }
 
   async loadRepairs() {
-    this.repairs = await storage.getRepairs();
+    try {
+      this.repairs = await storage.getRepairs();
+    } catch (error) {
+      console.error('Error loading repairs:', error);
+      this.showNotification('Erreur de chargement des réparations');
+      this.repairs = [];
+    }
   }
 
   async saveRepairs() {

@@ -818,67 +818,525 @@ table tfoot td {
 }
 
 /* ========================================
-   14. LOGIN PAGE STYLES
+   14. MODERN LOGIN PAGE REDESIGN
    ======================================== */
 
+/* === LOGIN BODY & ANIMATED BACKGROUND === */
 .login-body {
-  background-color: var(--bg-light);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: var(--spacing-md);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background-size: 200% 200%;
+    animation: gradientFlow 15s ease infinite;
+    position: relative;
+    overflow: hidden;
 }
 
+/* Smooth gradient animation */
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* === FLOATING BACKGROUND SHAPES === */
+.login-bg-shapes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.shape-1 {
+    width: 400px;
+    height: 400px;
+    top: -10%;
+    left: -5%;
+    animation: float1 20s ease-in-out infinite;
+}
+
+.shape-2 {
+    width: 300px;
+    height: 300px;
+    bottom: -10%;
+    right: -5%;
+    animation: float2 25s ease-in-out infinite;
+}
+
+.shape-3 {
+    width: 200px;
+    height: 200px;
+    top: 50%;
+    right: 10%;
+    animation: float3 30s ease-in-out infinite;
+}
+
+@keyframes float1 {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(30px, 30px) rotate(180deg); }
+}
+
+@keyframes float2 {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(-30px, -30px) rotate(-180deg); }
+}
+
+@keyframes float3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(20px, -20px) scale(1.1); }
+}
+
+/* === MAIN LOGIN CONTAINER === */
 .login-container {
-  width: 100%;
-  max-width: 450px;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 480px;
+    padding: 2rem;
+    animation: fadeInUp 0.8s ease-out;
 }
 
-.login-container header {
-  background: none;
-  border: none;
-  box-shadow: none;
-  padding: 0;
-  margin-bottom: var(--spacing-xl);
-  text-align: center;
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.login-container header h1 {
-  justify-content: center;
-  font-size: 1.5rem;
-  color: var(--dark-text);
+/* === LOGO & BRAND HEADER === */
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
-.login-container .card {
-  padding: var(--spacing-xl);
+.login-logo {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 1.25rem;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+    animation: logoFloat 3s ease-in-out infinite;
 }
 
-.login-container .card-title {
-  text-align: center;
-  margin-bottom: var(--spacing-lg);
-  font-size: 1.5rem;
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
 }
 
-.login-container .form-group {
-  margin-bottom: var(--spacing-lg);
+.login-brand {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 0.5rem 0;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    letter-spacing: -0.5px;
 }
 
-.login-container .form-actions {
-  margin-top: var(--spacing-xl);
+.login-tagline {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-weight: 400;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.login-container .btn {
-  width: 100%;
-  justify-content: center;
+/* === PREMIUM LOGIN CARD === */
+.login-card {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.login-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+        0 25px 70px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* === CARD TITLE & SUBTITLE === */
+.login-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0 0 0.5rem 0;
+    text-align: center;
+    letter-spacing: -0.5px;
+}
+
+.login-subtitle {
+    font-size: 0.9375rem;
+    color: #718096;
+    text-align: center;
+    margin: 0 0 2rem 0;
+    font-weight: 400;
+}
+
+/* === LOGIN FORM === */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* === FORM GROUP === */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin: 0;
+    letter-spacing: 0.3px;
+}
+
+/* === INPUT WRAPPER WITH ICON === */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1.125rem;
+    color: #a0aec0;
+    font-size: 1.375rem;
+    pointer-events: none;
+    transition: color 0.3s ease;
+}
+
+.form-input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3.5rem;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    color: #2d3748;
+    background: #f7fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-input::placeholder {
+    color: #cbd5e0;
+    font-weight: 300;
+}
+
+.form-input:focus {
+    background: #ffffff;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-input:focus ~ .input-icon,
+.input-wrapper:focus-within .input-icon {
+    color: #667eea;
+}
+
+/* === PASSWORD TOGGLE BUTTON === */
+.toggle-password {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #a0aec0;
+    cursor: pointer;
+    padding: 0.5rem;
+    font-size: 1.375rem;
+    transition: color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-password:hover {
+    color: #667eea;
+    transform: scale(1.1);
+}
+
+.toggle-password:active {
+    transform: scale(0.95);
+}
+
+/* === ERROR MESSAGE === */
 .error-message {
-  color: var(--danger-color);
-  margin-top: var(--spacing-md);
-  font-weight: 500;
-  text-align: center;
-  font-size: 0.875rem;
+    display: none;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+    border: 1px solid #fc8181;
+    border-radius: 12px;
+    color: #c53030;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: center;
+    animation: shake 0.5s ease;
+    box-shadow: 0 4px 12px rgba(245, 101, 101, 0.15);
+}
+
+.error-message:not(:empty) {
+    display: block;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+    20%, 40%, 60%, 80% { transform: translateX(8px); }
+}
+
+/* === PREMIUM LOGIN BUTTON === */
+.login-button {
+    width: 100%;
+    padding: 1.125rem 1.5rem;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    color: #ffffff;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 8px 24px rgba(102, 126, 234, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Button shimmer effect */
+.login-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.login-button:hover::before {
+    left: 100%;
+}
+
+.login-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 12px 32px rgba(102, 126, 234, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.login-button:active {
+    transform: translateY(-1px);
+    box-shadow: 
+        0 6px 20px rgba(102, 126, 234, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.login-button i {
+    font-size: 1.25rem;
+    transition: transform 0.3s ease;
+}
+
+.login-button:hover i {
+    transform: translateX(4px);
+}
+
+/* === LOGIN FOOTER === */
+.login-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    color: #718096;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.login-footer i {
+    color: #48bb78;
+    font-size: 1.125rem;
+}
+
+/* === COPYRIGHT === */
+.login-copyright {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* === RESPONSIVE DESIGN === */
+
+/* Tablets */
+@media (max-width: 768px) {
+    .login-container {
+        padding: 1.5rem;
+        max-width: 100%;
+    }
+
+    .login-logo {
+        width: 75px;
+        height: 75px;
+    }
+
+    .login-brand {
+        font-size: 1.75rem;
+    }
+
+    .login-tagline {
+        font-size: 0.875rem;
+    }
+
+    .login-card {
+        padding: 2.5rem 2rem;
+        border-radius: 20px;
+    }
+
+    .login-title {
+        font-size: 1.625rem;
+    }
+
+    .shape {
+        opacity: 0.5;
+    }
+}
+
+/* Mobile Phones */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 1rem;
+    }
+
+    .login-logo {
+        width: 70px;
+        height: 70px;
+    }
+
+    .login-brand {
+        font-size: 1.5rem;
+    }
+
+    .login-tagline {
+        font-size: 0.8125rem;
+    }
+
+    .login-card {
+        padding: 2rem 1.5rem;
+        border-radius: 18px;
+    }
+
+    .login-title {
+        font-size: 1.5rem;
+    }
+
+    .login-subtitle {
+        font-size: 0.875rem;
+    }
+
+    .form-input {
+        padding: 0.9375rem 0.9375rem 0.9375rem 3.25rem;
+        font-size: 0.9375rem;
+    }
+
+    .login-button {
+        padding: 1rem 1.25rem;
+        font-size: 1rem;
+    }
+
+    .shape-1,
+    .shape-2,
+    .shape-3 {
+        display: none;
+    }
+}
+
+/* === ACCESSIBILITY === */
+.form-input:focus-visible,
+.login-button:focus-visible,
+.toggle-password:focus-visible {
+    outline: 3px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* === DARK MODE SUPPORT === */
+@media (prefers-color-scheme: dark) {
+    .login-card {
+        background: rgba(26, 32, 44, 0.98);
+    }
+
+    .login-title {
+        color: #f7fafc;
+    }
+
+    .login-subtitle {
+        color: #cbd5e0;
+    }
+
+    .form-label {
+        color: #e2e8f0;
+    }
+
+    .form-input {
+        background: #2d3748;
+        border-color: #4a5568;
+        color: #f7fafc;
+    }
+
+    .form-input::placeholder {
+        color: #718096;
+    }
+
+    .form-input:focus {
+        background: #1a202c;
+        border-color: #667eea;
+    }
+
+    .login-footer {
+        border-top-color: #4a5568;
+        color: #cbd5e0;
+    }
 }
 
 /* ========================================
@@ -1485,5 +1943,488 @@ header {
     
     .stat-card .stat-value {
         font-size: 1.5rem;
+    }
+}
+
+/* ========================================
+   11. BARCODE SCANNER FOR SALES
+   ======================================== */
+
+.barcode-scan-section {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-left: 4px solid var(--primary-color);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    border-radius: var(--radius-md);
+}
+
+.barcode-scan-section h4 {
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.barcode-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.barcode-input {
+    flex: 1;
+    padding: 0.875rem 2.5rem 0.875rem 1rem;
+    font-size: 1rem;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    border: 2px solid var(--primary-color);
+    border-radius: var(--radius-md);
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.barcode-input:focus {
+    border-color: var(--primary-hover);
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+    transform: translateY(-1px);
+}
+
+.barcode-input::placeholder {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+}
+
+.btn-icon-clear {
+    position: absolute;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.btn-icon-clear:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--danger-color);
+}
+
+.btn-icon-clear i {
+    font-size: 1.25rem;
+}
+
+.barcode-result {
+    margin-top: var(--spacing-md);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    transition: all 0.3s ease;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.barcode-result-success {
+    background: #d1fae5;
+    border: 1px solid var(--success-color);
+    color: #065f46;
+}
+
+.barcode-result-error {
+    background: #fee2e2;
+    border: 1px solid var(--danger-color);
+    color: #991b1b;
+}
+
+.barcode-result-warning {
+    background: var(--warning-light);
+    border: 1px solid var(--warning-color);
+    color: #92400e;
+}
+
+.barcode-result-info {
+    background: #e0f2fe;
+    border: 1px solid var(--primary-color);
+    color: #075985;
+}
+
+/* Mobile optimization for barcode scanner */
+@media (max-width: 768px) {
+    .barcode-input {
+        font-size: 16px; /* Prevent zoom on iOS */
+        padding: 1rem 2.5rem 1rem 1rem;
+    }
+
+    .barcode-result {
+        font-size: 0.875rem;
+    }
+}
+
+/* ========================================
+   12. MOBILE-FIRST OPTIMIZATIONS
+   ======================================== */
+
+/* Small Mobile Devices (iPhone SE, small Android) */
+@media (max-width: 480px) {
+    /* Touch-friendly buttons (Apple HIG minimum 44px) */
+    .btn, button {
+        min-height: 44px;
+        padding: 0.75rem 1rem;
+        font-size: 0.9375rem;
+    }
+
+    /* Touch-friendly inputs */
+    input, select, textarea {
+        min-height: 44px;
+        font-size: 16px; /* Prevent zoom on iOS */
+        padding: 0.75rem;
+    }
+
+    /* Responsive navigation tabs */
+    .nav-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        padding-bottom: 0.5rem;
+    }
+
+    .nav-tab {
+        flex-shrink: 0;
+        min-width: auto;
+        padding: 0.75rem 1rem;
+    }
+
+    /* Stack form grids vertically */
+    .form-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem;
+    }
+
+    /* Full-width cards */
+    .card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Responsive tables */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .data-table {
+        font-size: 0.875rem;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 0.5rem;
+    }
+
+    /* Compact stats cards */
+    .stats-cards {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-card-value {
+        font-size: 1.5rem;
+    }
+
+    /* Header adjustments */
+    .app-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .header-logo {
+        justify-content: center;
+    }
+
+    /* Modal full screen on mobile */
+    .modal-content {
+        width: 95%;
+        max-height: 90vh;
+        margin: 5vh auto;
+    }
+
+    /* Toast notifications */
+    .toast {
+        left: 1rem;
+        right: 1rem;
+        width: auto;
+    }
+}
+
+/* Medium Mobile to Small Tablets */
+@media (max-width: 768px) {
+    .container {
+        padding: var(--spacing-md);
+    }
+
+    .grid-2-cols,
+    .grid-3-cols {
+        grid-template-columns: 1fr;
+    }
+
+    /* Horizontal scroll for wide content */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Responsive font sizes */
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1.25rem;
+    }
+}
+
+/* Landscape mobile optimization */
+@media (max-width: 896px) and (orientation: landscape) {
+    .app-header {
+        padding: 0.5rem 1rem;
+    }
+
+    .nav-tabs {
+        padding: 0.5rem 0;
+    }
+
+    .modal-content {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+}
+
+/* ========================================
+   13. STATUS BADGES & TAGS
+   ======================================== */
+
+.badge {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    text-transform: capitalize;
+}
+
+/* Repair Status Colors */
+.status-pending,
+.badge.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fbbf24;
+}
+
+.status-inProgress,
+.badge.status-inProgress {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #3b82f6;
+}
+
+.status-completed,
+.badge.status-completed {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid var(--success-color);
+}
+
+.status-delivered,
+.badge.status-delivered {
+    background: #e0e7ff;
+    color: #4338ca;
+    border: 1px solid #6366f1;
+}
+
+.status-cancelled,
+.badge.status-cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid var(--danger-color);
+}
+
+/* Add icon animation on hover */
+.badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+/* ========================================
+   13.5 CLIENT ROW SELECTION STYLES
+   ======================================== */
+
+/* Clickable client rows */
+#clients-table tbody tr.client-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#clients-table tbody tr.client-row:hover {
+    background-color: #f3f4f6;
+}
+
+/* Selected client row */
+#clients-table tbody tr.selected {
+    background-color: #e0f2fe !important;
+    border-left: 4px solid var(--primary-color);
+    font-weight: 500;
+}
+
+#clients-table tbody tr.selected:hover {
+    background-color: #d1eaf9 !important;
+}
+
+/* Action buttons panel */
+#client-actions-panel .btn-sm:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#client-actions-panel .btn-sm {
+    transition: all 0.2s ease;
+}
+
+/* ========================================
+   14. PAYMENT HISTORY MODAL STYLES
+   ======================================== */
+
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: fadeIn 0.3s;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--secondary-color);
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--danger-color);
+    transform: rotate(90deg);
+}
+
+.table-wrapper {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.table-wrapper::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: var(--light-bg);
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-text);
+}
+
+/* Mobile optimization for modal */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        max-height: 95vh;
+        padding: 1rem;
+    }
+
+    .modal-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .table-wrapper {
+        font-size: 0.875rem;
     }
 }

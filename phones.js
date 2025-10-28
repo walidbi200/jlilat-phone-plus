@@ -14,7 +14,13 @@ class PhonesManager {
   }
 
   async loadPhones() {
-    this.phones = await storage.getPhones();
+    try {
+      this.phones = await storage.getPhones();
+    } catch (error) {
+      console.error('Error loading phones:', error);
+      this.showNotification('Erreur de chargement des téléphones');
+      this.phones = [];
+    }
   }
 
   async savePhones() {

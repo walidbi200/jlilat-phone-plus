@@ -10,11 +10,18 @@ class SalesManager {
     await this.loadSales();
     this.render();
     this.attachEventListeners();
+    this.setupBarcodeScanner();
     this.populateProductSelect();
   }
 
   async loadSales() {
-    this.sales = await storage.getSales();
+    try {
+      this.sales = await storage.getSales();
+    } catch (error) {
+      console.error('Error loading sales:', error);
+      this.showNotification('Erreur de chargement des ventes');
+      this.sales = [];
+    }
   }
 
   async saveSales() {
@@ -310,6 +317,146 @@ class SalesManager {
     } catch (error) {
       console.error('Error deleting sale:', error);
       alert('Erreur lors de la suppression: ' + error.message);
+    }
+  }
+
+  // Setup barcode scanner input
+  setupBarcodeScanner() {
+    const barcodeInput = document.getElementById('barcode-scan-input');
+    const clearBtn = document.getElementById('clear-barcode-btn');
+    const resultDiv = document.getElementById('barcode-result');
+
+    if (!barcodeInput) return;
+
+    // Handle Enter key press
+    barcodeInput.addEventListener('keypress', async (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const barcode = barcodeInput.value.trim();
+        
+        if (!barcode) {
+          this.showBarcodeResult('Veuillez saisir un code-barres', 'error');
+          return;
+        }
+
+        await this.handleBarcodeScanned(barcode);
+      }
+    });
+
+    // Clear button
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        barcodeInput.value = '';
+        if (resultDiv) resultDiv.innerHTML = '';
+        barcodeInput.focus();
+      });
+    }
+
+    // Auto-focus on barcode input when page loads
+    setTimeout(() => barcodeInput.focus(), 300);
+  }
+
+  // Handle barcode scan and auto-fill product
+  async handleBarcodeScanned(barcode) {
+    const barcodeInput = document.getElementById('barcode-scan-input');
+    
+    try {
+      // Get all products
+      const products = await storage.getProducts();
+      
+      // Find product by barcode
+      const product = products.find(p => p.barcode && p.barcode.toLowerCase() === barcode.toLowerCase());
+      
+      if (!product) {
+        this.showBarcodeResult(`❌ Produit non trouvé pour le code: ${barcode}`, 'error');
+        barcodeInput.value = '';
+        barcodeInput.focus();
+        return;
+      }
+
+      // Check stock availability
+      if (product.stock <= 0) {
+        this.showBarcodeResult(`⚠️ "${product.name}" est en rupture de stock`, 'warning');
+        barcodeInput.value = '';
+        barcodeInput.focus();
+        return;
+      }
+
+      // Show success message
+      const price = product.sellingPrice || product.price || 0;
+      this.showBarcodeResult(
+        `✅ ${product.name} - ${price.toFixed(2)} DH (Stock: ${product.stock})`, 
+        'success'
+      );
+
+      // Auto-add to current sale with quantity 1
+      await this.addProductByBarcode(product);
+
+      // Clear input and refocus for next scan
+      barcodeInput.value = '';
+      barcodeInput.focus();
+
+    } catch (error) {
+      console.error('Barcode scan error:', error);
+      this.showBarcodeResult('❌ Erreur lors de la recherche du produit', 'error');
+      barcodeInput.value = '';
+      barcodeInput.focus();
+    }
+  }
+
+  // Add product directly from barcode scan
+  async addProductByBarcode(product) {
+    const quantity = 1; // Default quantity for barcode scan
+
+    // Validation
+    if (quantity > product.stock) {
+      this.showBarcodeResult(`⚠️ Stock insuffisant (Disponible: ${product.stock})`, 'warning');
+      return;
+    }
+
+    // Check if product already in current sale
+    const existingIndex = this.currentSaleItems.findIndex(item => item.productId === product.id);
+    
+    if (existingIndex !== -1) {
+      // Update quantity of existing item
+      const newQuantity = this.currentSaleItems[existingIndex].quantity + quantity;
+      if (newQuantity > product.stock) {
+        this.showBarcodeResult(`⚠️ Stock insuffisant (Disponible: ${product.stock})`, 'warning');
+        return;
+      }
+      this.currentSaleItems[existingIndex].quantity = newQuantity;
+    } else {
+      // Add new item
+      const sellingPrice = product.sellingPrice || product.price || 0;
+      const buyingPrice = product.buyingPrice || 0;
+
+      this.currentSaleItems.push({
+        productId: product.id,
+        productName: product.name,
+        quantity: quantity,
+        unitPrice: sellingPrice,
+        sellingPrice: sellingPrice,
+        buyingPrice: buyingPrice
+      });
+    }
+
+    this.renderCurrentSaleItems();
+  }
+
+  // Show barcode scan result with styling
+  showBarcodeResult(message, type = 'info') {
+    const resultDiv = document.getElementById('barcode-result');
+    if (!resultDiv) return;
+
+    resultDiv.textContent = message;
+    resultDiv.className = `barcode-result barcode-result-${type}`;
+    
+    // Auto-clear success messages after 3 seconds
+    if (type === 'success') {
+      setTimeout(() => {
+        resultDiv.textContent = '';
+        resultDiv.className = 'barcode-result';
+      }, 3000);
     }
   }
 

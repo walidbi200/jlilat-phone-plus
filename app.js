@@ -38,6 +38,19 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('Barcode scanner module loaded');
   }
 
+  // --- NEW: SALES CAMERA SCANNER BUTTON LISTENER ---
+  const scanSalesBtn = document.getElementById('scan-sales-barcode-btn');
+  if (scanSalesBtn) {
+      scanSalesBtn.addEventListener('click', () => {
+          if (typeof startSalesScanner === 'function') {
+              startSalesScanner();
+          } else {
+              console.error('startSalesScanner function not found.');
+          }
+      });
+      console.log('Sales camera scanner button listener attached');
+  }
+
   // --- ADD FORM LISTENERS ONCE (Fixed: Prevents duplicate submissions) ---
   const productForm = document.getElementById('product-form');
   if (productForm) {
@@ -85,7 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  const paymentForm = document.getElementById('payment-form');
+  // NEW: Payment History Modal Listeners
+  const paymentForm = document.getElementById('add-payment-form');
   if (paymentForm) {
       paymentForm.addEventListener('submit', (e) => {
           if (typeof creditsManager !== 'undefined') {
@@ -93,12 +107,89 @@ document.addEventListener('DOMContentLoaded', () => {
           }
       });
   }
+  
+  const closeHistoryModal = document.getElementById('close-history-modal-btn');
+  if (closeHistoryModal) {
+      closeHistoryModal.addEventListener('click', () => {
+          document.getElementById('payment-history-modal').classList.remove('active');
+      });
+  }
 
-  const paymentCloseBtn = document.getElementById('payment-close-btn');
-  if (paymentCloseBtn) {
-      paymentCloseBtn.addEventListener('click', () => {
+  // NEW: Load More Payments button listener (for pagination)
+  const loadMorePaymentsBtn = document.getElementById('load-more-payments-btn');
+  if (loadMorePaymentsBtn) {
+      loadMorePaymentsBtn.addEventListener('click', () => {
+          if (typeof loadMorePayments === 'function') {
+              loadMorePayments();
+          }
+      });
+  }
+
+  // NEW: Client Action Panel Buttons (select row pattern)
+  const viewHistoryActionBtn = document.getElementById('view-history-action-btn');
+  if (viewHistoryActionBtn) {
+      viewHistoryActionBtn.addEventListener('click', () => {
+          if (typeof creditsManager !== 'undefined' && selectedClientId) {
+              const tbody = document.getElementById('clients-table-body');
+              const row = tbody.querySelector(`tr.selected[data-id="${selectedClientId}"]`);
+              if (row) {
+                  const clientName = row.querySelector('td:first-child').textContent.trim();
+                  creditsManager.openPaymentHistoryModal(selectedClientId, clientName);
+              }
+          }
+      });
+  }
+
+  const editClientActionBtn = document.getElementById('edit-client-action-btn');
+  if (editClientActionBtn) {
+      editClientActionBtn.addEventListener('click', () => {
           if (typeof creditsManager !== 'undefined') {
-              creditsManager.closePaymentModal();
+              creditsManager.editClient();
+          }
+      });
+  }
+
+  const deleteClientActionBtn = document.getElementById('delete-client-action-btn');
+  if (deleteClientActionBtn) {
+      deleteClientActionBtn.addEventListener('click', () => {
+          if (typeof creditsManager !== 'undefined') {
+              creditsManager.deleteClient();
+          }
+      });
+  }
+
+  // NEW: Suppliers module form listeners
+  const supplierForm = document.getElementById('add-supplier-form');
+  if (supplierForm) {
+      supplierForm.addEventListener('submit', (e) => {
+          if (typeof suppliersManager !== 'undefined') {
+              suppliersManager.handleSubmit(e);
+          }
+      });
+  }
+  const cancelSupplierBtn = document.getElementById('cancel-supplier-btn');
+  if (cancelSupplierBtn) {
+      cancelSupplierBtn.addEventListener('click', () => {
+          if (typeof suppliersManager !== 'undefined') {
+              suppliersManager.resetForm();
+          }
+      });
+  }
+
+  // NEW: Expenses module form listeners
+  const expenseForm = document.getElementById('add-expense-form');
+  if (expenseForm) {
+      expenseForm.addEventListener('submit', (e) => {
+          if (typeof expensesManager !== 'undefined') {
+              expensesManager.handleSubmit(e);
+          }
+      });
+  }
+  const cancelExpenseBtn = document.getElementById('cancel-expense-btn');
+  if (cancelExpenseBtn) {
+      cancelExpenseBtn.addEventListener('click', () => {
+          if (typeof expensesManager !== 'undefined') {
+              expensesManager.resetForm();
           }
       });
   }
@@ -164,6 +255,12 @@ document.addEventListener('DOMContentLoaded', () => {
                   break;
               case 'credits':
                   if (typeof initCreditsPage === 'function') initCreditsPage();
+                  break;
+              case 'suppliers':
+                  if (typeof initSuppliersPage === 'function') initSuppliersPage();
+                  break;
+              case 'expenses':
+                  if (typeof initExpensesPage === 'function') initExpensesPage();
                   break;
               case 'data':
                   if (typeof initDataManagementPage === 'function') initDataManagementPage();

@@ -125,3 +125,108 @@ function showToast(message) {
     }
 }
 
+/**
+ * NEW: Starts the camera scanner specifically for the Sales page
+ * Automatically finds product and adds to current sale
+ */
+async function startSalesScanner() {
+    const modal = document.getElementById('scanner-modal');
+    const videoElement = document.getElementById('scanner-video');
+    
+    if (!modal || !videoElement) {
+        console.error('Scanner elements not found.');
+        return;
+    }
+    
+    // Check if salesManager is available
+    if (typeof salesManager === 'undefined') {
+        alert('Sales manager not initialized');
+        return;
+    }
+    
+    // Show the modal
+    modal.classList.add('active');
+
+    try {
+        // Initialize the code reader
+        codeReader = new ZXing.BrowserMultiFormatReader();
+        
+        // Get list of video input devices (cameras)
+        const devices = await codeReader.listVideoInputDevices();
+        
+        if (devices.length === 0) {
+            alert('Aucune caméra trouvée. Veuillez vérifier les permissions.');
+            stopScanner();
+            return;
+        }
+
+        console.log('Cameras found for sales scanner:', devices.length);
+        
+        // Try to find the back camera (environment) or use the first one
+        let selectedDeviceId = devices[0].deviceId;
+        
+        // On mobile, prefer the back camera
+        const backCamera = devices.find(device => 
+            device.label.toLowerCase().includes('back') || 
+            device.label.toLowerCase().includes('rear') ||
+            device.label.toLowerCase().includes('environment')
+        );
+        
+        if (backCamera) {
+            selectedDeviceId = backCamera.deviceId;
+            console.log('Using back camera for sales:', backCamera.label);
+        }
+        
+        // Start decoding from the selected camera
+        codeReader.decodeFromVideoDevice(selectedDeviceId, 'scanner-video', async (result, err) => {
+            if (result) {
+                // Barcode found!
+                console.log('Sales barcode detected:', result.text);
+                
+                // Stop scanner first
+                stopScanner();
+                
+                // Find product by barcode
+                try {
+                    const product = await storage.findProductByBarcode(result.text);
+                    
+                    if (!product) {
+                        // Product not found
+                        salesManager.showBarcodeResult(`❌ Produit non trouvé pour le code: ${result.text}`, 'error');
+                        return;
+                    }
+                    
+                    // Check stock
+                    if (product.stock <= 0) {
+                        salesManager.showBarcodeResult(`⚠️ "${product.name}" est en rupture de stock`, 'warning');
+                        return;
+                    }
+                    
+                    // Show success and add to sale
+                    const price = product.sellingPrice || product.price || 0;
+                    salesManager.showBarcodeResult(
+                        `✅ ${product.name} - ${price.toFixed(2)} DH (Stock: ${product.stock})`, 
+                        'success'
+                    );
+                    
+                    // Add product to sale
+                    await salesManager.addProductByBarcode(product);
+                    
+                } catch (error) {
+                    console.error('Error processing scanned barcode:', error);
+                    salesManager.showBarcodeResult('❌ Erreur lors du traitement du code-barres', 'error');
+                }
+            }
+            
+            if (err && !(err instanceof ZXing.NotFoundException)) {
+                console.error('Sales scanner error:', err);
+            }
+        });
+
+    } catch (err) {
+        console.error('Error initializing sales scanner:', err);
+        alert('Erreur de caméra: ' + err.message + '\n\nAssurez-vous d\'autoriser l\'accès à la caméra.');
+        stopScanner();
+    }
+}
+

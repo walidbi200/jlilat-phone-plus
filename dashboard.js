@@ -66,6 +66,9 @@ async function initDashboardPage() {
     // 5. RENDER CHARTS WITH THE COMBINED DATA
     renderDailyChart(allTransactions);
     renderMonthlyChart(allTransactions);
+
+    // 6. RENDER PAYMENT ALERTS
+    await renderPaymentAlerts();
 }
 
 // --- HELPER FUNCTION TO CALCULATE TOTALS ---
@@ -231,6 +234,73 @@ function renderDailyChart(transactions) {
     });
 }
 
+// --- PAYMENT ALERTS FUNCTION ---
+
+async function renderPaymentAlerts() {
+    try {
+        const clients = await storage.getClients();
+        const alertsList = document.getElementById('payment-alerts-list');
+        
+        if (!alertsList) return;
+
+        const today = Date.now();
+        const sevenDaysFromNow = today + (7 * 24 * 60 * 60 * 1000);
+
+        // Filter clients with payment alerts
+        const alerts = clients.filter(client => {
+            if (client.remainingBalance <= 0 || !client.paymentDueDate) return false;
+            return client.paymentDueDate <= sevenDaysFromNow;
+        });
+
+        if (alerts.length === 0) {
+            alertsList.innerHTML = `
+                <p style="text-align: center; padding: 2rem; color: #10b981;">
+                    <i class="ph ph-check-circle" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
+                    Aucune alerte de paiement.
+                </p>
+            `;
+            return;
+        }
+
+        // Sort: overdue first, then by due date
+        alerts.sort((a, b) => a.paymentDueDate - b.paymentDueDate);
+
+        let html = '<div class="table-responsive"><table class="data-table"><thead><tr>';
+        html += '<th>Client</th><th>Solde Restant</th><th>Date d\'échéance</th><th>Statut</th>';
+        html += '</tr></thead><tbody>';
+
+        alerts.forEach(client => {
+            const daysUntilDue = Math.floor((client.paymentDueDate - today) / (24 * 60 * 60 * 1000));
+            const isOverdue = daysUntilDue < 0;
+            
+            let statusHtml = '';
+            if (isOverdue) {
+                const daysOverdue = Math.abs(daysUntilDue);
+                statusHtml = `<span class="badge status-cancelled">En Retard (${daysOverdue} jours)</span>`;
+            } else {
+                statusHtml = `<span class="badge status-pending">Échéance Proche (${daysUntilDue} jours)</span>`;
+            }
+
+            const dueDateStr = new Date(client.paymentDueDate).toLocaleDateString('fr-FR');
+
+            html += `
+                <tr style="${isOverdue ? 'background-color: #fee2e2;' : ''}">
+                    <td><strong>${client.name}</strong><br><small>${client.phone}</small></td>
+                    <td><strong style="color: #ef4444;">${client.remainingBalance.toFixed(2)} DH</strong></td>
+                    <td>${dueDateStr}</td>
+                    <td>${statusHtml}</td>
+                </tr>
+            `;
+        });
+
+        html += '</tbody></table></div>';
+        alertsList.innerHTML = html;
+
+    } catch (error) {
+        console.error('Error rendering payment alerts:', error);
+    }
+}
+
 function renderMonthlyChart(transactions) {
     const ctx = document.getElementById('monthlyChart')?.getContext('2d');
     if (!ctx) return;
@@ -300,4 +370,71 @@ function renderMonthlyChart(transactions) {
             }
         }
     });
+}
+
+// --- PAYMENT ALERTS FUNCTION ---
+
+async function renderPaymentAlerts() {
+    try {
+        const clients = await storage.getClients();
+        const alertsList = document.getElementById('payment-alerts-list');
+        
+        if (!alertsList) return;
+
+        const today = Date.now();
+        const sevenDaysFromNow = today + (7 * 24 * 60 * 60 * 1000);
+
+        // Filter clients with payment alerts
+        const alerts = clients.filter(client => {
+            if (client.remainingBalance <= 0 || !client.paymentDueDate) return false;
+            return client.paymentDueDate <= sevenDaysFromNow;
+        });
+
+        if (alerts.length === 0) {
+            alertsList.innerHTML = `
+                <p style="text-align: center; padding: 2rem; color: #10b981;">
+                    <i class="ph ph-check-circle" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
+                    Aucune alerte de paiement.
+                </p>
+            `;
+            return;
+        }
+
+        // Sort: overdue first, then by due date
+        alerts.sort((a, b) => a.paymentDueDate - b.paymentDueDate);
+
+        let html = '<div class="table-responsive"><table class="data-table"><thead><tr>';
+        html += '<th>Client</th><th>Solde Restant</th><th>Date d\'échéance</th><th>Statut</th>';
+        html += '</tr></thead><tbody>';
+
+        alerts.forEach(client => {
+            const daysUntilDue = Math.floor((client.paymentDueDate - today) / (24 * 60 * 60 * 1000));
+            const isOverdue = daysUntilDue < 0;
+            
+            let statusHtml = '';
+            if (isOverdue) {
+                const daysOverdue = Math.abs(daysUntilDue);
+                statusHtml = `<span class="badge status-cancelled">En Retard (${daysOverdue} jours)</span>`;
+            } else {
+                statusHtml = `<span class="badge status-pending">Échéance Proche (${daysUntilDue} jours)</span>`;
+            }
+
+            const dueDateStr = new Date(client.paymentDueDate).toLocaleDateString('fr-FR');
+
+            html += `
+                <tr style="${isOverdue ? 'background-color: #fee2e2;' : ''}">
+                    <td><strong>${client.name}</strong><br><small>${client.phone}</small></td>
+                    <td><strong style="color: #ef4444;">${client.remainingBalance.toFixed(2)} DH</strong></td>
+                    <td>${dueDateStr}</td>
+                    <td>${statusHtml}</td>
+                </tr>
+            `;
+        });
+
+        html += '</tbody></table></div>';
+        alertsList.innerHTML = html;
+
+    } catch (error) {
+        console.error('Error rendering payment alerts:', error);
+    }
 }
